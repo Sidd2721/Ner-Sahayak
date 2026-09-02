@@ -1,0 +1,18 @@
+{
+  "name": "@ner-sahayak/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Single source of truth for NER Sahayak: Zod schemas, risk/continuity/priority formulas, geo helpers, corridor seed data, i18n. Imported by apps/mobile, apps/web and functions.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./i18n/*": "./src/i18n/*"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\""
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  }
+}

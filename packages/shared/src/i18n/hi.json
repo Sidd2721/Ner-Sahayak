@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "NER Sahayak",
+    "tagline": "पूर्वोत्तर के लिए सड़क जोखिम और आपूर्ति निरंतरता"
+  },
+  "nav": {
+    "report": "प्रतिबेदन",
+    "status": "स्थिति बोर्ड",
+    "settings": "सेटिंग्स"
+  },
+  "language": {
+    "en": "English",
+    "hi": "हिन्दी",
+    "as": "অসমীয়া"
+  },
+  "report": {
+    "title": "नया प्रतिबेदन",
+    "typeLabel": "क्या हुआ?",
+    "type": {
+      "roadBlocked": "सड़क अवरुद्ध / क्षतिग्रस्त",
+      "routeClear": "मार्ग साफ़",
+      "landslide": "भूस्खलन",
+      "flood": "बाढ़ / जलभराव",
+      "bridgeDamage": "पुल क्षतिग्रस्त",
+      "other": "अन्य"
+    },
+    "severityLabel": "गंभीरता",
+    "severityHint": "1 = मामूली … 5 = मार्ग पूरी तरह अवरुद्ध",
+    "locationLabel": "स्थान",
+    "locationDenied": "स्थान की अनुमति नहीं मिली — निर्देशांक स्वयं दर्ज करें",
+    "submit": "प्रतिबेदन भेजें",
+    "savedOffline": "डिवाइस पर सहेजा गया — ऑनलाइन आने पर सिंक होगा",
+    "saving": "सहेजा जा रहा है…"
+  },
+  "status": {
+    "title": "जिला स्थिति",
+    "corridor": "कॉरिडोर",
+    "district": "जिला",
+    "bufferDays": "{{days}} दिन का भंडार",
+    "riskLabel": "जोखिम",
+    "updated": "अपडेट: {{time}}",
+    "offlineBanner": "ऑफ़लाइन — अंतिम सहेजा डेटा दिख रहा है",
+    "pendingSync": "{{count}} प्रतिबेदन सिंक बाकी"
+  },
+  "risk": {
+    "Low": "निम्न",
+    "Medium": "मध्यम",
+    "High": "उच्च",
+    "Severe": "गंभीर"
+  },
+  "continuity": {
+    "title": "आपूर्ति निरंतरता",
+    "gapLabel": "निरंतरता अंतर: {{days}} दिन",
+    "status": {
+      "OK": "ठीक",
+      "WATCH": "सतर्क",
+      "CRITICAL": "गंभीर"
+    }
+  },
+  "sync": {
+    "online": "ऑनलाइन",
+    "offline": "ऑफ़लाइन",
+    "syncing": "सिंक हो रहा है…",
+    "synced": "सभी प्रतिबेदन सिंक हो गए",
+    "lastSync": "अंतिम सिंक: {{time}}"
+  },
+  "common": {
+    "ok": "ठीक",
+    "cancel": "रद्द करें",
+    "retry": "पुनः प्रयास करें",
+    "error": "कुछ गड़बड़ हो गई",
+    "loading": "लोड हो रहा है…"
+  }
+}

@@ -1,0 +1,144 @@
+rules_version = '2';
+
+/**
+ * NER Sahayak — Firestore Security Rules
+ * milestone-2-backend, branch: milestone-2-backend
+ *
+ * ARCHITECTURE.md §7 role model:
+ *   citizen/driver  — read/write own reports only
+ *   officer         — read all reports on their corridor; resource-write
+ *   control-room    — cross-corridor read + resource-write
+ *
+ * Rule design notes:
+ *
+ * 1. CREATE vs UPDATE are explicitly separate on `reports/`.
+ *    A client that knows an existing doc's ID cannot use `create` to
+ *    overwrite it (create only fires when the doc does not exist yet).
+ *    An attacker cannot "recreate" a doc to tamper with it — that would
+ *    be caught by the `update` rule which blocks non-Authority callers from
+ *    touching status/corroboration/priority fields.
+ *    The syncMutationQueue callable uses Admin SDK (bypasses rules), so
+ *    its setDoc is not subject to these create/update restrictions — but the
+ *    function itself enforces the same ownership check server-side.
+ *
+ * 2. Server-computed fields (corroborationScore, priorityKey) are blocked
+ *    on BOTH create and update for non-Authority clients. Direct client
+ *    writes of these fields are rejected regardless of auth state.
+ *    These fields are written only by the Admin-SDK-backed functions.
+ *
+ * 3. The `hasRole()` helper reads from /users/{uid}. Users must have a
+ *    `role` field ('citizen'|'driver'|'officer'|'control-room'). The
+ *    emulator seed script (test/seed.ts) populates these docs.
+ *
+ * 4. Delete is never allowed on reports (§7: "auto-archive rather than
+ *    delete"). Status transitions to 'archived' are the intended path.
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── helpers ──────────────────────────────────────────────────────────
+
+    function isAuthed() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthed() && request.auth.uid == uid;
+    }
+
+    function callerRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAuthority() {
+      return isAuthed() && (callerRole() == 'officer' || callerRole() == 'control-room');
+    }
+
+    // Fields that are exclusively server-computed and must never be present
+    // in an incoming client write. Checked on the full incoming document
+    // (create) or the set of changed keys (update).
+    function hasServerOnlyFields(data) {
+      return 'corroborationScore' in data
+          || 'priorityKey' in data
+          || 'corroborationUpdatedAt' in data;
+    }
+
+    // For UPDATE: check whether any server-only field keys appear in the
+    // set of keys that actually changed between the current and incoming doc.
+    function updatesServerOnlyFields() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return changed.hasAny(['corroborationScore', 'priorityKey', 'corroborationUpdatedAt']);
+    }
+
+    // ── reports ──────────────────────────────────────────────────────────
+
+    match /reports/{reportId} {
+
+      // Any authenticated user may read reports (citizens checking status,
+      // officers viewing the queue, control-room dashboard).
+      allow read: if isAuthed();
+
+      // CREATE — doc must not exist yet (Firestore enforces this for
+      // `allow create`; this rule does NOT fire on overwrite of existing doc).
+      //
+      // Requirements:
+      //   a) Caller is authenticated.
+      //   b) reporterId equals the caller's own uid (§7 "write own reports").
+      //   c) Server-only fields (corroborationScore, priorityKey) must be
+      //      absent — they are computed by onReportCreate after the write lands.
+      allow create: if isAuthed()
+                    && request.resource.data.reporterId == request.auth.uid
+                    && !hasServerOnlyFields(request.resource.data);
+
+      // UPDATE — doc already exists.
+      //
+      // Citizens/drivers may NOT update any report after creation. Updates
+      // are Authority-only (status transitions: dispatch, resolve, archive).
+      // Even Authority cannot overwrite the server-computed fields, the
+      // original reporterId, or the corroboration/priority values directly —
+      // those come from the function pipeline only.
+      allow update: if isAuthority()
+                    && !('reporterId' in request.resource.data.diff(resource.data).affectedKeys())
+                    && !updatesServerOnlyFields();
+
+      // DELETE is permanently disabled — §7 "resolved reports auto-archive
+      // rather than delete." Transition to status:'archived' instead.
+      allow delete: if false;
+    }
+
+    // ── corridors ────────────────────────────────────────────────────────
+
+    match /corridors/{corridorId} {
+      allow read: if isAuthed();
+      // Risk inputs and corridor state are written by Authority or Admin SDK.
+      allow create, update: if isAuthority();
+      allow delete: if false;
+    }
+
+    // ── districts ────────────────────────────────────────────────────────
+
+    match /districts/{districtId} {
+      allow read: if isAuthed();
+      // stockBufferDays and connectivity status are set by Authority (control-room).
+      // continuityGap / continuityStatus are written by onRiskScoreUpdate (Admin SDK).
+      allow create, update: if isAuthority();
+      allow delete: if false;
+    }
+
+    // ── users ────────────────────────────────────────────────────────────
+
+    match /users/{userId} {
+      // Users can read their own profile; Authority can read any profile
+      // (needed for role lookups and dispatch assignment).
+      allow read: if isOwner(userId) || isAuthority();
+      // Users write their own profile (display name, phone, lastKnownFix).
+      // They cannot change their own `role` — that is set by Admin SDK only
+      // during user provisioning.
+      allow create: if isOwner(userId) && !('role' in request.resource.data);
+      allow update: if isOwner(userId)
+                    && !('role' in request.resource.data.diff(resource.data).affectedKeys());
+      allow delete: if false;
+    }
+  }
+}
