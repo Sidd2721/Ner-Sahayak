@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "NER Sahayak",
+    "tagline": "উত্তৰ-পূৰ্বৰ বাবে পথ বিপদ আৰু যোগান ধাৰাবাহিকতা"
+  },
+  "nav": {
+    "report": "প্ৰতিবেদন",
+    "status": "স্থিতি ব'ৰ্ড",
+    "settings": "ছেটিংচ"
+  },
+  "language": {
+    "en": "English",
+    "hi": "हिन्दी",
+    "as": "অসমীয়া"
+  },
+  "report": {
+    "title": "নতুন প্ৰতিবেদন",
+    "typeLabel": "কি হ'ল?",
+    "type": {
+      "roadBlocked": "পথ অৱৰুদ্ধ / ক্ষতিগ্ৰস্ত",
+      "routeClear": "পথ মুক্ত",
+      "landslide": "ভূমিস্থলন",
+      "flood": "বানপানী",
+      "bridgeDamage": "দলং ক্ষতিগ্ৰস্ত",
+      "other": "অন্য"
+    },
+    "severityLabel": "তীব্ৰতা",
+    "severityHint": "১ = সামান্য … ৫ = পথ সম্পূৰ্ণ অৱৰুদ্ধ",
+    "locationLabel": "স্থান",
+    "locationDenied": "স্থানৰ অনুমতি নাপালোঁ — স্থানাংক নিজে লিখক",
+    "submit": "প্ৰতিবেদন পঠিয়াওক",
+    "savedOffline": "ডিভাইচত সাঁচি থোৱা হ'ল — অনলাইন হ'লে ছিংক হ'ব",
+    "saving": "সাঁচি থকা হৈ আছে…"
+  },
+  "status": {
+    "title": "জিলাৰ স্থিতি",
+    "corridor": "কৰিড'ৰ",
+    "district": "জিলা",
+    "bufferDays": "{{days}} দিনৰ ভঁৰাল",
+    "riskLabel": "বিপদ",
+    "updated": "আপডেট: {{time}}",
+    "offlineBanner": "অফলাইন — শেহতীয়া সাঁচি থোৱা তথ্য দেখুওৱা হৈছে",
+    "pendingSync": "{{count}}টা প্ৰতিবেদন ছিংক বাকী"
+  },
+  "risk": {
+    "Low": "নিম্ন",
+    "Medium": "মধ্যম",
+    "High": "উচ্চ",
+    "Severe": "গুৰুতৰ"
+  },
+  "continuity": {
+    "title": "যোগান ধাৰাবাহিকতা",
+    "gapLabel": "ধাৰাবাহিকতাৰ ব্যৱধান: {{days}} দিন",
+    "status": {
+      "OK": "ঠিক আছে",
+      "WATCH": "সতৰ্ক",
+      "CRITICAL": "গুৰুতৰ"
+    }
+  },
+  "sync": {
+    "online": "অনলাইন",
+    "offline": "অফলাইন",
+    "syncing": "ছিংক কৰা হৈ আছে…",
+    "synced": "সকলো প্ৰতিবেদন ছিংক হ'ল",
+    "lastSync": "শেহতীয়া ছিংক: {{time}}"
+  },
+  "common": {
+    "ok": "ঠিক আছে",
+    "cancel": "বাতিল কৰক",
+    "retry": "পুনঃ চেষ্টা কৰক",
+    "error": "কিবা ভুল হ'ল",
+    "loading": "লোড হৈ আছে…"
+  }
+}

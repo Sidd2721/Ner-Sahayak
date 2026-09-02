@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "NER Sahayak",
+    "tagline": "Road risk & supply continuity for the Northeast"
+  },
+  "nav": {
+    "report": "Report",
+    "status": "Status Board",
+    "settings": "Settings"
+  },
+  "language": {
+    "en": "English",
+    "hi": "हिन्दी",
+    "as": "অসমীয়া"
+  },
+  "report": {
+    "title": "New Report",
+    "typeLabel": "What happened?",
+    "type": {
+      "roadBlocked": "Road blocked / damaged",
+      "routeClear": "Route clear",
+      "landslide": "Landslide",
+      "flood": "Flood / waterlogging",
+      "bridgeDamage": "Bridge damaged",
+      "other": "Other"
+    },
+    "severityLabel": "Severity",
+    "severityHint": "1 = minor … 5 = blocks the corridor",
+    "locationLabel": "Location",
+    "locationDenied": "Location permission denied — enter coordinates manually",
+    "submit": "Submit report",
+    "savedOffline": "Saved on device — will sync when back online",
+    "saving": "Saving…"
+  },
+  "status": {
+    "title": "District Status",
+    "corridor": "Corridor",
+    "district": "District",
+    "bufferDays": "{{days}} days buffer",
+    "riskLabel": "Risk",
+    "updated": "Updated {{time}}",
+    "offlineBanner": "Offline — showing last saved data",
+    "pendingSync": "{{count}} report(s) waiting to sync"
+  },
+  "risk": {
+    "Low": "Low",
+    "Medium": "Medium",
+    "High": "High",
+    "Severe": "Severe"
+  },
+  "continuity": {
+    "title": "Supply Continuity",
+    "gapLabel": "Continuity gap: {{days}} days",
+    "status": {
+      "OK": "OK",
+      "WATCH": "Watch",
+      "CRITICAL": "Critical"
+    }
+  },
+  "sync": {
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Syncing…",
+    "synced": "All reports synced",
+    "lastSync": "Last sync: {{time}}"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "error": "Something went wrong",
+    "loading": "Loading…"
+  }
+}
