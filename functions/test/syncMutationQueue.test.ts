@@ -35,26 +35,27 @@ async function callFunction(
     body: JSON.stringify({ data }),
   });
 
-  const json = (await res.json()) as { result?: { ok: boolean; reportId?: string }; error?: { message: string } };
-  if (json.error) return { ok: false, error: json.error.message };
-  return json.result ?? { ok: false };
+  let text = '';
+  try {
+    text = await res.text();
+    const json = JSON.parse(text) as { result?: { ok: boolean; reportId?: string }; error?: { message: string } };
+    if (json.error) return { ok: false, error: json.error.message };
+    return json.result ?? { ok: false };
+  } catch (err: any) {
+    throw new Error(`Failed to parse JSON response. Status: ${res.status}. Text: ${text}. Error: ${err.message}`);
+  }
 }
 
-/**
- * Get a custom token from the Auth emulator and exchange it for an ID token
- * so we can include Authorization headers in function calls.
- * In the emulator, custom tokens signed with any secret are accepted.
- */
-async function getEmulatorIdToken(uid: string): Promise<string> {
+async function getEmulatorIdToken(uid: string, auth: import('firebase-admin/auth').Auth): Promise<string> {
+  const customToken = await auth.createCustomToken(uid);
   const AUTH_EMULATOR = process.env.FIREBASE_AUTH_EMULATOR_HOST ?? '127.0.0.1:9099';
-  // The emulator's token endpoint accepts a uid directly for testing.
   const res = await fetch(
     `http://${AUTH_EMULATOR}/identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=fake`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        token: uid, // emulator accepts uid directly as custom token
+        token: customToken,
         returnSecureToken: true,
       }),
     },
@@ -74,7 +75,7 @@ describe('syncMutationQueue — idempotency', () => {
       { email: 'sync-caller@test.com', password: 'pass1234', role: 'citizen' },
       db,
     );
-    idToken = await getEmulatorIdToken(callerUid);
+    idToken = await getEmulatorIdToken(callerUid, auth);
   });
 
   beforeEach(async () => {
@@ -103,8 +104,8 @@ describe('syncMutationQueue — idempotency', () => {
   it('same client UUID submitted twice → exactly one Firestore document', async () => {
     const payload = makePayload(callerUid);
 
-    const result1 = await callFunction('syncMutationQueue', payload, idToken);
-    const result2 = await callFunction('syncMutationQueue', payload, idToken);
+    const result1 = await callFunction('syncMutationQueue', { id: payload.id, payload }, idToken);
+    const result2 = await callFunction('syncMutationQueue', { id: payload.id, payload }, idToken);
 
     assert.equal(result1.ok, true, 'First submission should succeed');
     assert.equal(result2.ok, true, 'Second submission (retry) should also succeed');
@@ -126,7 +127,7 @@ describe('syncMutationQueue — idempotency', () => {
       reporterId: 'someone-elses-uid', // tampered
     };
 
-    const result = await callFunction('syncMutationQueue', payload, idToken);
+    const result = await callFunction('syncMutationQueue', { id: payload.id, payload }, idToken);
     assert.equal(result.ok, false, 'Should reject mismatched reporterId');
     assert.ok(result.error?.includes('permission-denied') || result.error?.includes('reporterId'),
       `Expected permission-denied error, got: ${result.error}`);
@@ -134,7 +135,7 @@ describe('syncMutationQueue — idempotency', () => {
 
   it('unauthenticated call is rejected', async () => {
     const payload = makePayload(callerUid);
-    const result = await callFunction('syncMutationQueue', payload, undefined); // no token
+    const result = await callFunction('syncMutationQueue', { id: payload.id, payload }, undefined); // no token
     assert.equal(result.ok, false, 'Should reject unauthenticated calls');
   });
 
@@ -145,7 +146,7 @@ describe('syncMutationQueue — idempotency', () => {
       priorityKey: 99.9,
     };
 
-    const result = await callFunction('syncMutationQueue', payload, idToken);
+    const result = await callFunction('syncMutationQueue', { id: payload.id, payload }, idToken);
     // Function should succeed but strip the server-only fields.
     assert.equal(result.ok, true, 'Should succeed but strip server-only fields');
 

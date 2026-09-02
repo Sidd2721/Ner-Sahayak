@@ -8,11 +8,11 @@
   "scripts": {
     "build": "tsc --noEmit",
     "serve": "firebase emulators:start --only functions,firestore,auth",
-    "test": "node --import tsx/esm --test test/**/*.test.ts",
+    "test": "node --import tsx/esm --test --test-concurrency=1 test/**/*.test.ts",
     "lint": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20"
   },
   "dependencies": {
     "firebase-admin": "^13.4.0",

@@ -113,7 +113,9 @@ export const onReportCreate = onDocumentCreated(
       // This ensures the cohort converges: if report A and B were already
       // 'unconfirmed' at score 0.33/0.67, a third report C makes all three
       // 'confirmed' at score 1.0 in one atomic pass.
+      let snapUpdated = false;
       for (const doc of bucketSnap.docs) {
+        if (doc.id === snap.id) snapUpdated = true;
         const existingSeverity = (doc.data().severity as number) ?? severity;
         const existingPriorityKey = calcPriorityKey({
           severity: existingSeverity,
@@ -128,14 +130,14 @@ export const onReportCreate = onDocumentCreated(
         });
       }
 
-      // Write to the triggering document itself (may not be in bucketSnap
-      // if the query race didn't return it — belt and suspenders).
-      txn.update(snap.ref, {
-        corroborationScore,
-        priorityKey,
-        status: newStatus,
-        corroborationUpdatedAt: FieldValue.serverTimestamp(),
-      });
+      if (!snapUpdated) {
+        txn.update(snap.ref, {
+          corroborationScore,
+          priorityKey,
+          status: newStatus,
+          corroborationUpdatedAt: FieldValue.serverTimestamp(),
+        });
+      }
     });
 
     // --- Trigger downstream risk score update for the corridor ---

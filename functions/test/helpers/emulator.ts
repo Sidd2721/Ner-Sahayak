@@ -75,7 +75,16 @@ export async function createTestUser(
   opts: { email: string; password: string; role: 'citizen' | 'driver' | 'officer' | 'control-room' },
   db: Firestore,
 ): Promise<string> {
-  const user = await auth.createUser({ email: opts.email, password: opts.password });
+  let user;
+  try {
+    user = await auth.createUser({ email: opts.email, password: opts.password });
+  } catch (err: any) {
+    if (err.code === 'auth/email-already-exists') {
+      user = await auth.getUserByEmail(opts.email);
+    } else {
+      throw err;
+    }
+  }
   // Seed the /users/{uid} document so the rules' hasRole() lookup works.
   await db.doc(`users/${user.uid}`).set({
     email: opts.email,
