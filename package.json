@@ -1,0 +1,9 @@
+{
+  "name": "ner-sahayak-root",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "functions"
+  ]
+}
