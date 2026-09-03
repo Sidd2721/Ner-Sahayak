@@ -1,0 +1,218 @@
+[debug] [2026-09-03T11:51:27.417Z] ----------------------------------------------------------------------
+[debug] [2026-09-03T11:51:27.422Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\avadu\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --project demo-sih2026
+[debug] [2026-09-03T11:51:27.423Z] CLI Version:   15.29.0
+[debug] [2026-09-03T11:51:27.423Z] Platform:      win32
+[debug] [2026-09-03T11:51:27.423Z] Node Version:  v26.5.1
+[debug] [2026-09-03T11:51:27.424Z] Detected Agent: antigravity
+[debug] [2026-09-03T11:51:27.424Z] Time:          Thu Sep 03 2026 17:21:27 GMT+0530 (India Standard Time)
+[debug] [2026-09-03T11:51:27.424Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-09-03T11:51:59.293Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] Failed to authenticate, have you run firebase login?
+[warn] !  emulators: You are not currently authenticated so some features may not work correctly. Please run firebase login to authenticate the CLI. 
+[debug] [2026-09-03T11:51:59.539Z] openjdk version "21.0.12.1" 2026-08-18 LTS
+
+[debug] [2026-09-03T11:51:59.540Z] OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+
+[debug] [2026-09-03T11:51:59.550Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: auth, functions, firestore, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, extensions"}}
+[info] i  emulators: Detected demo project ID "demo-sih2026", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail. {"metadata":{"emulator":{"name":"hub"},"message":"Detected demo project ID \"demo-sih2026\", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail."}}
+[debug] [2026-09-03T11:51:59.573Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.573Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.573Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.574Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.574Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2026-09-03T11:51:59.583Z] Found emulator hub locator: {"version":"15.29.0","origins":["http://127.0.0.1:4400","http://[::1]:4400"],"pid":20848}
+[debug] [2026-09-03T11:51:59.583Z] Write emulator hub locator at C:\Users\avadu\AppData\Local\Temp\hub-demo-sih2026.json
+[debug] [2026-09-03T11:51:59.594Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2026-09-03T11:51:59.604Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.604Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.604Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-03T11:51:59.604Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[debug] [2026-09-03T11:51:59.625Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2026-09-03T11:51:59.626Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2026-09-03T11:51:59.626Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\avadu\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.22.0.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--database-edition","standard","--project_id","demo-sih2026","--rules","C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\firestore.rules","--single_project_mode",true,"--functions_emulator","127.0.0.1:5001"],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","database-edition","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false,"shell":false,"port":8080} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\avadu\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.22.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--database-edition\",\"standard\",\"--project_id\",\"demo-sih2026\",\"--rules\",\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\firestore.rules\",\"--single_project_mode\",true,\"--functions_emulator\",\"127.0.0.1:5001\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"database-edition\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false,\"port\":8080}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2026-09-03T11:52:01.803Z] Sept 03, 2026 5:22:01 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://127.0.0.1:9150
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:22:01 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\r\nINFO: Started WebSocket server on ws://127.0.0.1:9150\r\n"}}
+[debug] [2026-09-03T11:52:01.893Z] 
+API endpoint: http://127.0.0.1:8080
+ {"metadata":{"emulator":{"name":"firestore"},"message":"\nAPI endpoint: http://127.0.0.1:8080\n"}}
+[debug] [2026-09-03T11:52:01.894Z] Database Edition: STANDARD
+Database Mode: CLOUD_FIRESTORE
+
+If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080
+
+If you are running a Firestore in Datastore Mode project, run:
+
+   export DATASTORE_EMULATOR_HOST=127.0.0.1:8080
+
+Note: Support for Datastore Mode is in preview. If you encounter any bugs please file at https://github.com/firebase/firebase-tools/issues.
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Database Edition: STANDARD\nDatabase Mode: CLOUD_FIRESTORE\n\nIf you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\r\n\n   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080\n\nIf you are running a Firestore in Datastore Mode project, run:\r\n\n   export DATASTORE_EMULATOR_HOST=127.0.0.1:8080\n\nNote: Support for Datastore Mode is in preview. If you encounter any bugs please file at https://github.com/firebase/firebase-tools/issues.\r\nDev App Server is now running.\n\r\n"}}
+[info] +  firestore: Firestore Emulator was started in standard edition. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator was started in standard edition."}}
+[info] +  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2026-09-03T11:52:09.986Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[info] i  functions: Watching "C:\Users\avadu\OneDrive\Desktop\NER SAHAYAK\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\" for Cloud Functions..."}}
+[debug] [2026-09-03T11:52:09.991Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] !  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-09-03T11:52:11.684Z] > [functions] package.json contents: {
+  "name": "ner-sahayak-functions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Firebase Cloud Functions for NER Sahayak — milestone-2-backend.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "serve": "firebase emulators:start --only functions,firestore,auth",
+    "test": "node --import tsx/esm --test --test-concurrency=1 test/**/*.test.ts",
+    "lint": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.4.0",
+    "firebase-functions": "^6.5.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
+[debug] [2026-09-03T11:52:11.685Z] Building nodejs source
+[debug] [2026-09-03T11:52:11.685Z] Failed to find version of module node: reached end of search path C:\Users\avadu\OneDrive\Desktop\NER SAHAYAK\functions\node_modules
+[warn] !  functions: Your requested "node" version "20" doesn't match your global version "26". Using node@26 from host. 
+[debug] [2026-09-03T11:52:11.688Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-09-03T11:52:11.698Z] Found firebase-functions binary at 'C:\Users\avadu\OneDrive\Desktop\NER SAHAYAK\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8375
+
+[debug] [2026-09-03T11:52:17.320Z] Got response from /__/functions.yaml {"endpoints":{"onReportCreate":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"reports/{reportId}"},"retry":false},"entryPoint":"onReportCreate"},"onRiskScoreUpdate":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.written","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"corridors/{corridorId}"},"retry":false},"entryPoint":"onRiskScoreUpdate"},"syncMutationQueue":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"syncMutationQueue"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] +  functions: Loaded functions definitions from source: onReportCreate, onRiskScoreUpdate, syncMutationQueue. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onReportCreate, onRiskScoreUpdate, syncMutationQueue."}}
+[debug] [2026-09-03T11:52:20.402Z] Found a v2 firestore trigger.
+[debug] [2026-09-03T11:52:20.402Z] addFirestoreTrigger "{\"eventType\":\"google.cloud.firestore.document.v1.created\",\"database\":\"(default)\",\"namespace\":\"(default)\",\"document\":{\"value\":\"reports/{reportId}\",\"matchType\":\"PATH_PATTERN\"}}"
+[debug] [2026-09-03T11:52:20.405Z] >>> [apiv2][query] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onReportCreate-0 [none]
+[debug] [2026-09-03T11:52:20.405Z] >>> [apiv2][body] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onReportCreate-0 "{\"eventType\":\"google.cloud.firestore.document.v1.created\",\"database\":\"(default)\",\"namespace\":\"(default)\",\"document\":{\"value\":\"reports/{reportId}\",\"matchType\":\"PATH_PATTERN\"}}"
+[debug] [2026-09-03T11:52:20.422Z] Sept 03, 2026 5:22:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:22:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T11:52:20.758Z] Sept 03, 2026 5:22:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:22:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T11:52:22.155Z] <<< [apiv2][status] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onReportCreate-0 200
+[debug] [2026-09-03T11:52:22.156Z] <<< [apiv2][body] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onReportCreate-0 {"eventType":"google.cloud.firestore.document.v1.created","database":"(default)","namespace":"(default)","document":{"value":"reports/{reportId}","matchType":"PATH_PATTERN"}}
+[info] +  functions[us-central1-onReportCreate]: firestore function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mfirestore\u001b[22m function initialized."}}
+[debug] [2026-09-03T11:52:22.156Z] Found a v2 firestore trigger.
+[debug] [2026-09-03T11:52:22.156Z] addFirestoreTrigger "{\"eventType\":\"google.cloud.firestore.document.v1.written\",\"database\":\"(default)\",\"namespace\":\"(default)\",\"document\":{\"value\":\"corridors/{corridorId}\",\"matchType\":\"PATH_PATTERN\"}}"
+[debug] [2026-09-03T11:52:22.157Z] >>> [apiv2][query] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onRiskScoreUpdate-0 [none]
+[debug] [2026-09-03T11:52:22.157Z] >>> [apiv2][body] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onRiskScoreUpdate-0 "{\"eventType\":\"google.cloud.firestore.document.v1.written\",\"database\":\"(default)\",\"namespace\":\"(default)\",\"document\":{\"value\":\"corridors/{corridorId}\",\"matchType\":\"PATH_PATTERN\"}}"
+[debug] [2026-09-03T11:52:22.165Z] Sept 03, 2026 5:22:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:22:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T11:52:22.180Z] <<< [apiv2][status] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onRiskScoreUpdate-0 200
+[debug] [2026-09-03T11:52:22.180Z] <<< [apiv2][body] POST http://127.0.0.1:8080/emulator/v1/projects/demo-sih2026/eventarcTrigger?eventarcTriggerId=us-central1-onRiskScoreUpdate-0 {"eventType":"google.cloud.firestore.document.v1.written","database":"(default)","namespace":"(default)","document":{"value":"corridors/{corridorId}","matchType":"PATH_PATTERN"}}
+[info] +  functions[us-central1-onRiskScoreUpdate]: firestore function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mfirestore\u001b[22m function initialized."}}
+[info] +  functions[us-central1-syncMutationQueue]: http function initialized (http://127.0.0.1:5001/demo-sih2026/us-central1/syncMutationQueue). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/demo-sih2026/us-central1/syncMutationQueue)."}}
+[debug] [2026-09-03T11:52:22.196Z] Could not find VSCode notification endpoint: TypeError: fetch failed. If you are not running the Firebase SQL Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬──────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI              │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth       │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Extensions     │ 127.0.0.1:5001 │ http://127.0.0.1:4000/extensions │
+└────────────────┴────────────────┴──────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500, 9150
+┌─────────────────────────┬───────────────┬─────────────────────┐
+│ Extension Instance Name │ Extension Ref │ View in Emulator UI │
+└─────────────────────────┴───────────────┴─────────────────────┘
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2026-09-03T11:59:48.991Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast [none]
+[debug] [2026-09-03T11:59:48.991Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast {"eventId":"38553f2f-a79a-433e-b3d0-90aa7709d3af","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/demo-sih2026","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2026-09-03T11:59:48.990Z","data":{"uid":"citizen-123","email":"citizen@test.com","emailVerified":false,"metadata":{"creationTime":"2026-09-03T11:59:48.989Z","lastSignInTime":"2026-09-03T11:59:48.989Z"},"customClaims":{},"providerData":[{"rawId":"citizen@test.com","providerId":"password","email":"citizen@test.com","federatedId":"citizen@test.com"}]}}
+[debug] [2026-09-03T11:59:49.003Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast 200
+[debug] [2026-09-03T11:59:49.003Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2026-09-03T11:59:49.013Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast [none]
+[debug] [2026-09-03T11:59:49.013Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast {"eventId":"2c2e071e-78c6-4f56-8c8f-fe40c18775e0","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/demo-sih2026","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2026-09-03T11:59:49.013Z","data":{"uid":"officer-123","email":"control-room@test.com","emailVerified":false,"metadata":{"creationTime":"2026-09-03T11:59:49.013Z","lastSignInTime":"2026-09-03T11:59:49.013Z"},"customClaims":{},"providerData":[{"rawId":"control-room@test.com","providerId":"password","email":"control-room@test.com","federatedId":"control-room@test.com"}]}}
+[debug] [2026-09-03T11:59:49.018Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast 200
+[debug] [2026-09-03T11:59:49.018Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/demo-sih2026/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2026-09-03T11:59:49.167Z] Sept 03, 2026 5:29:49 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:29:49 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T11:59:49.607Z] [work-queue] {"queuedWork":["/functions/projects/demo-sih2026/triggers/us-central1-onRiskScoreUpdate-0-2026-09-03T11:59:49.606Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2026-09-03T11:59:49.607Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/functions/projects/demo-sih2026/triggers/us-central1-onRiskScoreUpdate-0-2026-09-03T11:59:49.606Z"],"workRunningCount":1}
+[debug] [2026-09-03T11:59:49.607Z] Accepted request POST /functions/projects/demo-sih2026/triggers/us-central1-onRiskScoreUpdate-0 --> us-central1-onRiskScoreUpdate-0
+[debug] [2026-09-03T11:59:49.609Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-09-03T11:59:49.610Z] [functions] Got req.url=/functions/projects/demo-sih2026/triggers/us-central1-onRiskScoreUpdate-0, mapping to path=/functions/projects/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/functions/projects/demo-sih2026/triggers/us-central1-onRiskScoreUpdate-0, mapping to path=/functions/projects/"}}
+[debug] [2026-09-03T11:59:49.627Z] [worker-pool] addWorker(us-central1-onRiskScoreUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-onRiskScoreUpdate)"}}
+[debug] [2026-09-03T11:59:49.627Z] [worker-pool] Adding worker with key us-central1-onRiskScoreUpdate, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-onRiskScoreUpdate, total=1"}}
+[debug] [2026-09-03T11:59:51.898Z] [runtime-status] [16308] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.10.0","resolution":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.10.0\",\"resolution\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-09-03T11:59:51.902Z] [runtime-status] [16308] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.6.0","resolution":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.6.0\",\"resolution\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-09-03T11:59:51.902Z] [runtime-status] [16308] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-09-03T11:59:51.903Z] [runtime-status] [16308] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.6.0","resolution":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.6.0\",\"resolution\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-09-03T11:59:52.404Z] [runtime-status] [16308] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.10.0","resolution":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.10.0\",\"resolution\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-09-03T11:59:52.468Z] [runtime-status] [16308] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.6.0","resolution":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.6.0\",\"resolution\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-09-03T11:59:53.639Z] [runtime-status] [16308] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"13.10.0","resolution":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions\\node_modules\\firebase-admin\\lib\\index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"13.10.0\",\"resolution\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}}"}}
+[debug] [2026-09-03T11:59:54.155Z] [runtime-status] [16308] Functions runtime initialized. {"cwd":"C:\\Users\\avadu\\OneDrive\\Desktop\\NER SAHAYAK\\functions","node_version":"26.5.1"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Functions runtime initialized. {\"cwd\":\"C:\\\\Users\\\\avadu\\\\OneDrive\\\\Desktop\\\\NER SAHAYAK\\\\functions\",\"node_version\":\"26.5.1\"}"}}
+[debug] [2026-09-03T11:59:54.156Z] [runtime-status] [16308] Listening to port: \\?\pipe\fire_emu_340236ef491d426f {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] Listening to port: \\\\?\\pipe\\fire_emu_340236ef491d426f"}}
+[debug] [2026-09-03T11:59:54.268Z] [worker-us-central1-onRiskScoreUpdate-10b96ac9-c93a-4e3d-b6f0-e08a9143210e]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[worker-us-central1-onRiskScoreUpdate-10b96ac9-c93a-4e3d-b6f0-e08a9143210e]: IDLE"}}
+[debug] [2026-09-03T11:59:54.269Z] [worker-pool] submitRequest(triggerId=us-central1-onRiskScoreUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-onRiskScoreUpdate)"}}
+[info] i  functions: Beginning execution of "us-central1-onRiskScoreUpdate" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"Beginning execution of \"us-central1-onRiskScoreUpdate\""}}
+[debug] [2026-09-03T11:59:54.270Z] [worker-us-central1-onRiskScoreUpdate-10b96ac9-c93a-4e3d-b6f0-e08a9143210e]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[worker-us-central1-onRiskScoreUpdate-10b96ac9-c93a-4e3d-b6f0-e08a9143210e]: BUSY"}}
+[debug] [2026-09-03T11:59:54.275Z] [runtime-status] [16308] RunCloudEvent {"specversion":"1.0","type":"google.cloud.firestore.document.v1.written","source":"//firestore.googleapis.com/projects/projects/demo-sih2026/databases/(default)","id":"77230648-6b7c-4481-bfd5-8d2e256146a8","subject":"documents/corridors/nh-27","time":"2026-09-03T11:59:49Z","datacontenttype":"application/protobuf","dataschema":"https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/firestore/v1/data.proto","location":"us-central1","project":"demo-sih2026","database":"(default)","namespace":"(default)","document":"corridors/nh-27","data":{"type":"Buffer","data":[10,116,10,67,112,114,111,106,101,99,116,115,47,100,101,109,111,45,115,105,104,50,48,50,54,47,100,97,116,97,98,97,115,101,115,47,40,100,101,102,97,117,108,116,41,47,100,111,99,117,109,101,110,116,115,47,99,111,114,114,105,100,111,114,115,47,110,104,45,50,55,18,17,10,6,115,116,97,116,117,115,18,7,138,1,4,111,112,101,110,26,12,8,181,194,229,212,6,16,176,149,211,246,1,34,12,8,181,194,229,212,6,16,176,149,211,246,1,26,0]}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[runtime-status] [16308] RunCloudEvent {\"specversion\":\"1.0\",\"type\":\"google.cloud.firestore.document.v1.written\",\"source\":\"//firestore.googleapis.com/projects/projects/demo-sih2026/databases/(default)\",\"id\":\"77230648-6b7c-4481-bfd5-8d2e256146a8\",\"subject\":\"documents/corridors/nh-27\",\"time\":\"2026-09-03T11:59:49Z\",\"datacontenttype\":\"application/protobuf\",\"dataschema\":\"https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/firestore/v1/data.proto\",\"location\":\"us-central1\",\"project\":\"demo-sih2026\",\"database\":\"(default)\",\"namespace\":\"(default)\",\"document\":\"corridors/nh-27\",\"data\":{\"type\":\"Buffer\",\"data\":[10,116,10,67,112,114,111,106,101,99,116,115,47,100,101,109,111,45,115,105,104,50,48,50,54,47,100,97,116,97,98,97,115,101,115,47,40,100,101,102,97,117,108,116,41,47,100,111,99,117,109,101,110,116,115,47,99,111,114,114,105,100,111,114,115,47,110,104,45,50,55,18,17,10,6,115,116,97,116,117,115,18,7,138,1,4,111,112,101,110,26,12,8,181,194,229,212,6,16,176,149,211,246,1,34,12,8,181,194,229,212,6,16,176,149,211,246,1,26,0]}}"}}
+[debug] [2026-09-03T11:59:54.283Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"Finishing up request with event=finish"}}
+[info] i  functions: Finished "us-central1-onRiskScoreUpdate" in 13.6668ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"Finished \"us-central1-onRiskScoreUpdate\" in 13.6668ms"}}
+[debug] [2026-09-03T11:59:54.283Z] [worker-us-central1-onRiskScoreUpdate-10b96ac9-c93a-4e3d-b6f0-e08a9143210e]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"[worker-us-central1-onRiskScoreUpdate-10b96ac9-c93a-4e3d-b6f0-e08a9143210e]: IDLE"}}
+[debug] [2026-09-03T11:59:54.284Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onRiskScoreUpdate"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2026-09-03T11:59:54.284Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2026-09-03T12:00:13.841Z] Sept 03, 2026 5:30:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:30:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:00:13.899Z] Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '"singleProjectMode": false' property in the firebase.json emulators config.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '\"singleProjectMode\": false' property in the firebase.json emulators config.\r\n"}}
+[debug] [2026-09-03T12:00:13.998Z] Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '"singleProjectMode": false' property in the firebase.json emulators config.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '\"singleProjectMode\": false' property in the firebase.json emulators config.\r\n"}}
+[debug] [2026-09-03T12:00:14.358Z] Sept 03, 2026 5:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:00:14.385Z] Sept 03, 2026 5:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:00:14.445Z] Sept 03, 2026 5:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 5:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:30:54.284Z] Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:30:54.291Z] Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '"singleProjectMode": false' property in the firebase.json emulators config.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '\"singleProjectMode\": false' property in the firebase.json emulators config.\r\n"}}
+[debug] [2026-09-03T12:30:54.291Z] Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '"singleProjectMode": false' property in the firebase.json emulators config.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Multiple projectIds are not recommended in single project mode. Requested project ID sih2026-ce822, but the emulator is configured for demo-sih2026. To opt-out of single project mode add/set the '\"singleProjectMode\": false' property in the firebase.json emulators config.\r\n"}}
+[debug] [2026-09-03T12:30:54.307Z] Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:30:54.327Z] Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}
+[debug] [2026-09-03T12:30:54.409Z] Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Sept 03, 2026 6:00:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\r\nINFO: Detected non-HTTP/2 connection.\r\n"}}

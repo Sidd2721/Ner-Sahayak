@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const SHELL_CACHE = `ner-shell-${CACHE_VERSION}`;
 
 const SHELL_FILES = [
@@ -39,6 +39,19 @@ self.addEventListener('fetch', (event) => {
   if (url.hostname.includes('firestore.googleapis.com') ||
       url.hostname.includes('firebaseio.com') ||
       url.hostname.includes('googleapis.com')) {
+    return;
+  }
+
+  if (url.hostname.includes('tile.openstreetmap.org')) {
+    event.respondWith(
+      caches.open('map-tiles-v1').then(async (cache) => {
+        const cached = await cache.match(event.request);
+        if (cached) return cached;
+        const response = await fetch(event.request);
+        cache.put(event.request, response.clone());
+        return response;
+      })
+    );
     return;
   }
 

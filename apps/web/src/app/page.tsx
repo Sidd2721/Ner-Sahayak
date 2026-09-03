@@ -114,7 +114,7 @@ export default function Dashboard() {
                     </span>
                   </div>
                   <p className="text-sm text-gray-500">
-                    Severity: {report.severity}/5 • Reported: {report.createdAt?.toDate().toLocaleString() || 'Just now'}
+                    Severity: {report.severity}/5 • Reported: {report.createdAt?.toDate ? report.createdAt.toDate().toLocaleString() : report.createdAt ? new Date(report.createdAt as unknown as string).toLocaleString() : 'Just now'}
                   </p>
                 </div>
                 <div className="text-sm font-medium text-blue-600 hover:text-blue-700 cursor-pointer">

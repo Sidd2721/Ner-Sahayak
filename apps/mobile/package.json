@@ -14,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "dexie": "^4.4.5",
-    "firebase": "^12.18.0"
+    "firebase": "^12.18.0",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "vite": "^8.2.2"

@@ -49,7 +49,7 @@ export async function submitReport({ type, severity, description }) {
       reportId,
       type, severity, description,
       lat: coords.lat, lng: coords.lng,
-      status: 'pending',
+      status: 'unconfirmed',
       synced: false,
       priorityKey, // kept locally for offline sort/display ordering only
       createdAt: new Date(),

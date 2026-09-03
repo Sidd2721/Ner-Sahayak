@@ -5,6 +5,7 @@ import { initAuth, login } from './auth.js';
 import { SyncEngine } from './sync.js';
 import { submitReport } from './report-form.js';
 import { renderStatusBoard, subscribeCorridorUpdates } from './status-board.js';
+import { renderCorridorMap, startLiveLocationTracking } from './map.js';
 import { setLanguage, getLanguage, t } from './i18n.js';
 import { plainLanguageRisk } from './risk.js';
 
@@ -46,7 +47,12 @@ initAuth(auth, (user) => {
     const syncEngine = new SyncEngine(fdb);
     syncEngine.start();
     
+    window.addEventListener('nersahayak:sync', () => {
+      import('./status-board.js').then(m => m.renderPendingBadge());
+    });
+    
     subscribeCorridorUpdates(fdb, onSnapshot, collection, doc);
+    renderCorridorMap().then(() => startLiveLocationTracking());
   } else {
     authView.classList.remove('hidden');
     appView.classList.add('hidden');
@@ -70,7 +76,7 @@ function updateRiskPreview() {
   const sev = parseInt(severityInput.value, 10);
   const type = document.getElementById('report-type').value;
   // Use shared logic for risk
-  const risk = plainLanguageRisk({ severity: sev / 10, type, weatherImpact: 0, roadCondition: 0 }, t);
+  const risk = plainLanguageRisk({ severity: sev / 5, type, weatherImpact: 0, roadCondition: 0 }, t);
   riskPreview.textContent = risk.message + ' (' + risk.score + ')';
 }
 
