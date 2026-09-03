@@ -6,84 +6,214 @@
   <title>NER Sahayak Mobile</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1d4ed8">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #8b5cf6;
+      --secondary: #3b82f6;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    
     body {
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Outfit', -apple-system, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f8fafc;
-      color: #0f172a;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
     }
+
+    /* Header styling */
     header {
-      background: #1d4ed8;
-      color: white;
-      padding: 1rem;
+      padding: 1.5rem 1.2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
     }
+    
+    #app-title {
+      background: linear-gradient(to right, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
     .container {
-      padding: 1rem;
+      padding: 1.2rem;
       max-width: 600px;
       margin: 0 auto;
     }
-    /* Minimal UI for the app shell */
+
+    /* Glassmorphism Card System */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .glass-card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: white;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Status Board Rows */
     #status-board { margin-bottom: 2rem; }
     .district-row {
       display: flex;
       justify-content: space-between;
-      padding: 0.75rem;
-      border-bottom: 1px solid #e2e8f0;
-      background: white;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
     }
     .status-critical { border-left: 4px solid #ef4444; }
     .status-watch { border-left: 4px solid #f97316; }
     .status-ok { border-left: 4px solid #22c55e; }
-    
-    .card {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 1rem;
-    }
-    button {
-      background: #1d4ed8;
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      font-weight: bold;
-      width: 100%;
-      cursor: pointer;
-    }
-    button:disabled { background: #94a3b8; }
+
+    /* Forms and Inputs */
     input, select, textarea {
       width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1.2rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: white;
+      font-family: 'Outfit', sans-serif;
       box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
     
-    /* Utility */
-    .hidden { display: none !important; }
-    #pending-badge {
-      font-size: 0.8rem;
-      background: #f59e0b;
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #64748b;
+    }
+    
+    select option {
+      background: #1e293b;
       color: white;
-      padding: 0.2rem 0.5rem;
+    }
+
+    /* Buttons */
+    button {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+      color: white;
+      border: none;
+      padding: 1rem;
       border-radius: 12px;
+      font-size: 1.1rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button:disabled { 
+      background: #475569;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Range Slider Styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      padding: 0;
+      border: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      margin-top: -8px;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    /* Badges & Utility */
+    .hidden { display: none !important; }
+    
+    #pending-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #f59e0b;
+      color: #78350f;
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+      margin-right: 0.5rem;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+    }
+    
+    .header-controls {
+      display: flex;
+      align-items: center;
+    }
+    
+    #lang-select {
+      width: auto;
+      margin: 0;
+      padding: 0.3rem 0.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 style="margin:0; font-size:1.2rem;" id="app-title">NER Sahayak</h1>
-    <div>
+    <h1 id="app-title">NER Sahayak</h1>
+    <div class="header-controls">
       <span id="pending-badge" class="hidden">Pending Sync</span>
-      <select id="lang-select" style="width:auto; margin:0; padding:0.2rem;">
+      <select id="lang-select">
         <option value="en">EN</option>
         <option value="hi">HI</option>
         <option value="as">AS</option>
@@ -92,37 +222,42 @@
   </header>
 
   <div id="auth-view" class="container hidden">
-    <div class="card">
-      <h2 id="login-title">Login</h2>
-      <input type="email" id="auth-email" placeholder="Email" />
+    <div class="glass-card">
+      <h2 id="login-title">Welcome Back!</h2>
+      <p style="color: var(--text-muted); margin-top: -1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">Login to report incidents or view alerts</p>
+      
+      <input type="email" id="auth-email" placeholder="Email Address" />
       <input type="password" id="auth-pass" placeholder="Password" />
-      <button id="auth-submit">Login</button>
+      <button id="auth-submit">Login ➔</button>
     </div>
   </div>
 
   <div id="app-view" class="container hidden">
-    <section class="card">
-      <h2 id="status-title" style="margin-top:0;">Corridor Status (NH-27)</h2>
-      <div id="map-container" style="height: 300px; width: 100%; border-radius: 8px; margin-bottom: 1rem; z-index: 1; background: #e2e8f0;"></div>
+    <section class="glass-card">
+      <h2 id="status-title">Live Incident Map</h2>
+      <div id="map-container" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 1.5rem; z-index: 1; border: 1px solid var(--glass-border);"></div>
       <div id="status-board">
         <!-- Rendered from local Dexie -->
-        <div style="padding:1rem; text-align:center; color:#64748b;">Loading status...</div>
+        <div style="padding:1rem; text-align:center; color:var(--text-muted);">Loading status...</div>
       </div>
     </section>
 
-    <div class="card" id="report-card">
-      <h2 id="report-title" style="margin-top:0;">Submit Report</h2>
+    <div class="glass-card" id="report-card">
+      <h2 id="report-title">Submit a New Report</h2>
+      
+      <label>Incident Type</label>
       <select id="report-type">
         <option value="landslide">Landslide</option>
         <option value="washout">Road Washout</option>
         <option value="accident">Accident</option>
       </select>
       
-      <label id="severity-label">Severity (1-5)</label>
+      <label id="severity-label">Severity Level (1-5)</label>
       <input type="range" id="report-severity" min="1" max="5" value="3">
-      <div id="risk-preview" style="margin-bottom:1rem; font-size:0.9rem; color:#64748b;">Moderate Risk</div>
+      <div id="risk-preview" style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-muted); font-weight: 500;">Moderate Risk</div>
       
-      <textarea id="report-desc" placeholder="Description" rows="3"></textarea>
+      <label>Details</label>
+      <textarea id="report-desc" placeholder="Describe the incident..." rows="3"></textarea>
       
       <button id="report-submit">Submit Offline Report</button>
     </div>
