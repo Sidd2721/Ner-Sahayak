@@ -139,7 +139,7 @@ export default function ReportsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {report.createdAt?.toDate().toLocaleString() || 'Unknown'}
+                        {report.createdAt?.toDate ? report.createdAt.toDate().toLocaleString() : report.createdAt ? new Date(report.createdAt as unknown as string).toLocaleString() : 'Unknown'}
                       </td>
                     </tr>
                   ))

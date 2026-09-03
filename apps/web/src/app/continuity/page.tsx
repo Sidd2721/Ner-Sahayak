@@ -58,9 +58,23 @@ export default function ContinuityPage() {
                   <div className="flex justify-between items-center mb-3">
                     <div>
                       <h3 className="font-bold text-lg text-gray-900">{district.name}</h3>
-                      <p className="text-sm text-gray-500">
-                        Connectivity: <span className="capitalize">{district.connectivityStatus}</span>
-                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-sm text-gray-500">Connectivity:</span>
+                        <select 
+                          className="text-sm border rounded px-2 py-1 outline-none bg-white"
+                          value={district.connectivityStatus}
+                          onChange={async (e) => {
+                            const { doc, updateDoc } = await import('firebase/firestore');
+                            await updateDoc(doc(db, 'districts', district.id), {
+                              connectivityStatus: e.target.value
+                            });
+                          }}
+                        >
+                          <option value="connected">Connected</option>
+                          <option value="degraded">Degraded</option>
+                          <option value="isolated">Isolated</option>
+                        </select>
+                      </div>
                     </div>
                     <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${getStatusColor(status)}`}>
                       {status}
@@ -70,13 +84,41 @@ export default function ContinuityPage() {
                   <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Risk Score</p>
-                      <p className="font-mono font-medium">
-                        {(district.currentRiskScore * 100).toFixed(1)}% <span className="text-gray-400">({cat})</span>
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="range" 
+                          min="0" max="1" step="0.05"
+                          className="w-20"
+                          value={district.currentRiskScore}
+                          onChange={async (e) => {
+                            const { doc, updateDoc } = await import('firebase/firestore');
+                            await updateDoc(doc(db, 'districts', district.id), {
+                              currentRiskScore: parseFloat(e.target.value)
+                            });
+                          }}
+                        />
+                        <p className="font-mono font-medium text-sm">
+                          {(district.currentRiskScore * 100).toFixed(0)}% <span className="text-gray-400">({cat})</span>
+                        </p>
+                      </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Buffer Stock</p>
-                      <p className="font-mono font-medium">{district.stockBufferDays} days</p>
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="number" 
+                          min="0" max="30"
+                          className="w-16 text-sm border rounded px-1 outline-none font-mono"
+                          value={district.stockBufferDays}
+                          onChange={async (e) => {
+                            const { doc, updateDoc } = await import('firebase/firestore');
+                            await updateDoc(doc(db, 'districts', district.id), {
+                              stockBufferDays: parseInt(e.target.value, 10)
+                            });
+                          }}
+                        />
+                        <span className="font-mono font-medium text-sm">days</span>
+                      </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Continuity Gap</p>

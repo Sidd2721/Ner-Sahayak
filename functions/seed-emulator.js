@@ -44,6 +44,16 @@ async function seed() {
   await db.collection('corridors').doc('nh-27').set({
     status: 'open'
   });
+  
+  await db.collection('users').doc('citizen-123').set({
+    role: 'citizen',
+    email: 'citizen@test.com'
+  });
+  await db.collection('users').doc('officer-123').set({
+    role: 'control-room',
+    email: 'control-room@test.com'
+  });
+  
   console.log('✅ Seeded DB');
 }
 

@@ -76,7 +76,7 @@ function updateRiskPreview() {
   const sev = parseInt(severityInput.value, 10);
   const type = document.getElementById('report-type').value;
   // Use shared logic for risk
-  const risk = plainLanguageRisk({ severity: sev / 10, type, weatherImpact: 0, roadCondition: 0 }, t);
+  const risk = plainLanguageRisk({ severity: sev / 5, type, weatherImpact: 0, roadCondition: 0 }, t);
   riskPreview.textContent = risk.message + ' (' + risk.score + ')';
 }
 
