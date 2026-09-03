@@ -42,6 +42,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  if (url.hostname.includes('tile.openstreetmap.org')) {
+    event.respondWith(
+      caches.open('map-tiles-v1').then(async (cache) => {
+        const cached = await cache.match(event.request);
+        if (cached) return cached;
+        const response = await fetch(event.request);
+        cache.put(event.request, response.clone());
+        return response;
+      })
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return cached || fetch(event.request).catch(() => caches.match('/index.html'));

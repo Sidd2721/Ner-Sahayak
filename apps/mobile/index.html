@@ -101,13 +101,14 @@
   </div>
 
   <div id="app-view" class="container hidden">
-    <div class="card" id="status-card">
+    <section class="card">
       <h2 id="status-title" style="margin-top:0;">Corridor Status (NH-27)</h2>
+      <div id="map-container" style="height: 300px; width: 100%; border-radius: 8px; margin-bottom: 1rem; z-index: 1; background: #e2e8f0;"></div>
       <div id="status-board">
         <!-- Rendered from local Dexie -->
         <div style="padding:1rem; text-align:center; color:#64748b;">Loading status...</div>
       </div>
-    </div>
+    </section>
 
     <div class="card" id="report-card">
       <h2 id="report-title" style="margin-top:0;">Submit Report</h2>

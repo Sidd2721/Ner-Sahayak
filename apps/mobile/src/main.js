@@ -5,6 +5,7 @@ import { initAuth, login } from './auth.js';
 import { SyncEngine } from './sync.js';
 import { submitReport } from './report-form.js';
 import { renderStatusBoard, subscribeCorridorUpdates } from './status-board.js';
+import { renderCorridorMap, startLiveLocationTracking } from './map.js';
 import { setLanguage, getLanguage, t } from './i18n.js';
 import { plainLanguageRisk } from './risk.js';
 
@@ -47,6 +48,7 @@ initAuth(auth, (user) => {
     syncEngine.start();
     
     subscribeCorridorUpdates(fdb, onSnapshot, collection, doc);
+    renderCorridorMap().then(() => startLiveLocationTracking());
   } else {
     authView.classList.remove('hidden');
     appView.classList.add('hidden');

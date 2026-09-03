@@ -5,5 +5,8 @@
     "apps/*",
     "packages/*",
     "functions"
-  ]
+  ],
+  "dependencies": {
+    "@playwright/test": "^1.62.1"
+  }
 }
