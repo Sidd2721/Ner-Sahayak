@@ -1,0 +1,10 @@
+This PR wires the Continuity page to live Firestore `districts` data using `onSnapshot` and removes the mock sliders. It also changes the Firebase UI emulator port to `4005` to prevent collision with other apps (like ZCode's offline app) potentially running on port 4000.
+
+### Verification of `onReportCreate` (First Pass)
+
+The `onReportCreate` Firestore trigger was verified as successfully computing both `corroborationScore` and `priorityKey` on the backend. This was validated using a synthetic script (`functions/insert-report.js`) that directly injected a raw report matching the shape of a citizen submission without those fields. The trigger correctly stamped the report with the calculated values.
+
+**IMPORTANT NOTE**: This script-based test is a **first pass**. 
+I am only claiming that the *synthetic insert* passed verification. 
+
+Once `milestone-3-mobile` has a functioning report submission feature, this same `onSnapshot` check should be re-done against a real submission from the mobile app interface to verify the end-to-end integration.

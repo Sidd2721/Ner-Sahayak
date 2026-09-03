@@ -22,13 +22,26 @@ export async function renderStatusBoard() {
 }
 
 export function subscribeCorridorUpdates(fdb, onSnapshot, collection, doc) {
-  const ref = doc(fdb, 'corridors', 'nh-27');
-  return onSnapshot(ref, async (snap) => {
+  const corridorRef = doc(fdb, 'corridors', 'nh-27');
+  const corridorUnsub = onSnapshot(corridorRef, async (snap) => {
     if (snap.exists()) {
       await db.corridorState.put({ corridorId: 'nh-27', ...snap.data() });
       renderStatusBoard();
     }
   });
+
+  const districtsRef = collection(fdb, 'districts');
+  const districtsUnsub = onSnapshot(districtsRef, async (snap) => {
+    for (const d of snap.docs) {
+      await db.districts.put({ id: d.id, ...d.data() });
+    }
+    renderStatusBoard();
+  });
+
+  return () => {
+    corridorUnsub();
+    districtsUnsub();
+  };
 }
 
 /**

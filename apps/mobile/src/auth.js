@@ -1,13 +1,22 @@
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDoc, doc } from 'firebase/firestore';
+import { fdb } from './firebase.js';
 import { db } from './db.js';
 
 export function initAuth(auth, onUserChanged) {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // Typically we'd fetch the role from Firestore, but since this is offline-first,
-      // we might just cache whatever we can, or assume reporter.
-      // For this spec, we just cache uid and email.
-      await db.session.put({ key: 'currentUser', uid: user.uid, email: user.email, role: 'reporter' });
+      let role = 'citizen'; // default fallback
+      try {
+        const userDoc = await getDoc(doc(fdb, 'users', user.uid));
+        if (userDoc.exists() && userDoc.data().role) {
+          role = userDoc.data().role;
+        }
+      } catch (err) {
+        console.warn('Failed to fetch role (offline?), using fallback', err);
+      }
+      
+      await db.session.put({ key: 'currentUser', uid: user.uid, email: user.email, role });
       onUserChanged(user);
     } else {
       await db.session.delete('currentUser');

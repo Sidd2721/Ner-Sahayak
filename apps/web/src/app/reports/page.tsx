@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, query, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, Timestamp, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/AuthProvider';
 
@@ -23,7 +23,16 @@ export default function ReportsPage() {
   useEffect(() => {
     if (!user) return;
 
-    const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
+    let q;
+    if (filterStatus === 'all') {
+      q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
+    } else {
+      q = query(
+        collection(db, 'reports'),
+        where('status', '==', filterStatus),
+        orderBy('createdAt', 'desc')
+      );
+    }
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
@@ -35,13 +44,12 @@ export default function ReportsPage() {
     });
 
     return () => unsubscribe();
-  }, [user]);
+  }, [user, filterStatus]); // Add filterStatus to dependency array
 
   if (!user) return null;
 
-  const filteredReports = filterStatus === 'all' 
-    ? reports 
-    : reports.filter(r => r.status === filterStatus);
+  const filteredReports = reports;
+
 
   return (
     <div className="p-8 max-w-7xl mx-auto">

@@ -1,6 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator, onSnapshot, doc } from 'firebase/firestore';
+import { auth, fdb } from './firebase.js';
+import { onSnapshot, doc, collection } from 'firebase/firestore';
 
 import { initAuth, login } from './auth.js';
 import { SyncEngine } from './sync.js';
@@ -8,23 +7,6 @@ import { submitReport } from './report-form.js';
 import { renderStatusBoard, subscribeCorridorUpdates } from './status-board.js';
 import { setLanguage, getLanguage, t } from './i18n.js';
 import { plainLanguageRisk } from './risk.js';
-
-// Dummy config for emulator
-const firebaseConfig = {
-  projectId: "sih2026-ce822",
-  apiKey: "dummy-api-key",
-  appId: "dummy-app-id"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const fdb = getFirestore(app);
-
-// Use emulator-only config
-if (import.meta.env.VITE_USE_EMULATOR === 'true' || true) {
-  connectAuthEmulator(auth, 'http://127.0.0.1:9099');
-  connectFirestoreEmulator(fdb, '127.0.0.1', 8080);
-}
 
 // UI Elements
 const appTitle = document.getElementById('app-title');
@@ -64,7 +46,7 @@ initAuth(auth, (user) => {
     const syncEngine = new SyncEngine(fdb);
     syncEngine.start();
     
-    subscribeCorridorUpdates(fdb, onSnapshot, null, doc);
+    subscribeCorridorUpdates(fdb, onSnapshot, collection, doc);
   } else {
     authView.classList.remove('hidden');
     appView.classList.add('hidden');
