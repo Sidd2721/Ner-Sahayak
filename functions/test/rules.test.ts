@@ -145,6 +145,44 @@ describe('firestore.rules', () => {
     );
   });
 
+  // ── Missing required fields (VERIFICATION_REPORT §4.2) ────────────────
+  // The rule now requires reporterId, geohash, AND corridorId to all be
+  // present in the payload. A create silently missing any one must be denied
+  // — not accepted as a partial document that breaks corroboration routing.
+
+  it('citizen CREATE missing reporterId → denied', async () => {
+    const ctx = testEnv.authenticatedContext(CITIZEN_UID);
+    const { reporterId: _dropped, ...payloadWithoutReporterId } = {
+      ...VALID_REPORT,
+      reporterId: CITIZEN_UID,
+    };
+    await assertFails(
+      setDoc(doc(ctx.firestore(), 'reports', 'missing-reporterid'), payloadWithoutReporterId),
+    );
+  });
+
+  it('citizen CREATE missing geohash → denied', async () => {
+    const ctx = testEnv.authenticatedContext(CITIZEN_UID);
+    const { geohash: _dropped, ...payloadWithoutGeohash } = {
+      ...VALID_REPORT,
+      reporterId: CITIZEN_UID,
+    };
+    await assertFails(
+      setDoc(doc(ctx.firestore(), 'reports', 'missing-geohash'), payloadWithoutGeohash),
+    );
+  });
+
+  it('citizen CREATE missing corridorId → denied', async () => {
+    const ctx = testEnv.authenticatedContext(CITIZEN_UID);
+    const { corridorId: _dropped, ...payloadWithoutCorridorId } = {
+      ...VALID_REPORT,
+      reporterId: CITIZEN_UID,
+    };
+    await assertFails(
+      setDoc(doc(ctx.firestore(), 'reports', 'missing-corridorid'), payloadWithoutCorridorId),
+    );
+  });
+
   it('unauthenticated CREATE → denied', async () => {
     const ctx = testEnv.unauthenticatedContext();
     await assertFails(

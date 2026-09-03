@@ -85,9 +85,16 @@ service cloud.firestore {
       // Requirements:
       //   a) Caller is authenticated.
       //   b) reporterId equals the caller's own uid (§7 "write own reports").
-      //   c) Server-only fields (corroborationScore, priorityKey) must be
+      //   c) All three fields required for corroboration routing and rules
+      //      enforcement must be present in the payload: reporterId, geohash,
+      //      corridorId. A create missing any one is rejected — not just
+      //      silently stored as incomplete (VERIFICATION_REPORT §4.2: this
+      //      exact gap — a payload silently missing required fields — caused
+      //      every sync to be denied once in this project's history).
+      //   d) Server-only fields (corroborationScore, priorityKey) must be
       //      absent — they are computed by onReportCreate after the write lands.
       allow create: if isAuthed()
+                    && request.resource.data.keys().hasAll(['reporterId', 'geohash', 'corridorId'])
                     && request.resource.data.reporterId == request.auth.uid
                     && !hasServerOnlyFields(request.resource.data);
 
