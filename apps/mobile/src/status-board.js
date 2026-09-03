@@ -30,3 +30,16 @@ export function subscribeCorridorUpdates(fdb, onSnapshot, collection, doc) {
     }
   });
 }
+
+/**
+ * Updates the pending-report badge count in the UI immediately after a report
+ * is written to the local IndexedDB outbox — no network call.
+ */
+export async function renderPendingBadge() {
+  const count = await db.outbox.count();
+  const badge = document.getElementById('pending-badge');
+  if (badge) {
+    badge.textContent = count > 0 ? `${count} pending` : '';
+    badge.style.display = count > 0 ? 'inline' : 'none';
+  }
+}

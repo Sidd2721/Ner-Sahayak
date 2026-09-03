@@ -23,6 +23,7 @@ export const REPORT_TYPES = [
 export async function submitReport({ type, severity, description }) {
   const coords = await getCoordinates();
   const user = await getCachedUser();
+  const reporterId = user?.uid || 'anonymous';
   // NH-27 carries the maximum criticalityWeight (1.0); corroboration starts
   // at 0 — §4.4 escalation happens server-side as distinct reports arrive.
   const priorityKey = calcPriorityKey({
@@ -31,6 +32,11 @@ export async function submitReport({ type, severity, description }) {
     criticalityWeight: NH27_CORRIDOR.criticalityWeight,
   });
   const createdAt = new Date().toISOString();
+  // Geohash the coordinates for §4.4 corroboration bucketing
+  const geohash = (coords.lat != null && coords.lng != null)
+    ? encodeGeohash(coords.lat, coords.lng)
+    : '';
+  const corridorId = NH27_CORRIDOR.id;
   // client-generated UUID at creation; sync is an idempotent upsert on it
   // (ARCHITECTURE.md §10 — duplicate-report-on-offline-retry resolution)
   const reportId = crypto.randomUUID(); // this becomes the Firestore doc ID —
@@ -52,8 +58,17 @@ export async function submitReport({ type, severity, description }) {
       // (computed by the onReportCreate trigger), and reject a client
       // create that includes them. Sending them here would fail, not
       // silently succeed with a wrong value.
-      payload: { reportId, type, severity, description, lat: coords.lat, lng: coords.lng,
-                 status: 'pending', createdAt: new Date() },
+      payload: {
+        reportId, type, severity, description,
+        lat: coords.lat, lng: coords.lng,
+        // Required by firestore.rules (VERIFICATION_REPORT §4.2):
+        // rules reject any create missing reporterId, geohash, or corridorId.
+        reporterId,
+        geohash,
+        corridorId,
+        status: 'unconfirmed',
+        createdAt,
+      },
     });
     await db.outbox.add({
       opType: 'create-report',

@@ -24,3 +24,8 @@ export async function getCachedRole() {
   const session = await db.session.get('currentUser');
   return session?.role || null;
 }
+
+/** Returns the full cached session { uid, email, role } or null if not logged in. */
+export async function getCachedUser() {
+  return db.session.get('currentUser') || null;
+}
