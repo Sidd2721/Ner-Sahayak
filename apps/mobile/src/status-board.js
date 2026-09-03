@@ -53,6 +53,12 @@ export async function renderPendingBadge() {
   const badge = document.getElementById('pending-badge');
   if (badge) {
     badge.textContent = count > 0 ? `${count} pending` : '';
-    badge.style.display = count > 0 ? 'inline' : 'none';
+    if (count > 0) {
+      badge.classList.remove('hidden');
+      badge.style.display = 'inline';
+    } else {
+      badge.classList.add('hidden');
+      badge.style.display = 'none';
+    }
   }
 }

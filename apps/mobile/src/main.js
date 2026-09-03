@@ -47,6 +47,10 @@ initAuth(auth, (user) => {
     const syncEngine = new SyncEngine(fdb);
     syncEngine.start();
     
+    window.addEventListener('nersahayak:sync', () => {
+      import('./status-board.js').then(m => m.renderPendingBadge());
+    });
+    
     subscribeCorridorUpdates(fdb, onSnapshot, collection, doc);
     renderCorridorMap().then(() => startLiveLocationTracking());
   } else {

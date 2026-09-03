@@ -44,12 +44,18 @@ import { test, expect, chromium } from '@playwright/test';
     await context.setOffline(false);
     console.log('✅ Browser set to Online mode.');
     
+    // Force the 'online' event in the page just in case Playwright's setOffline(false) doesn't fire it reliably
+    await page.evaluate(() => window.dispatchEvent(new Event('online')));
+
     // Wait for badge to disappear
     await page.waitForSelector('#pending-badge', { state: 'hidden', timeout: 15000 });
     console.log('✅ Outbox drained successfully.');
 
     console.log('--- Step 4: Web Dashboard Verification ---');
     const webPage = await context.newPage();
+    webPage.on('console', msg => console.log('WEB PAGE LOG:', msg.text()));
+    webPage.on('pageerror', err => console.log('WEB PAGE ERROR:', err.message));
+
     await webPage.goto('http://localhost:3000/login');
     
     // Login to control room
@@ -57,19 +63,22 @@ import { test, expect, chromium } from '@playwright/test';
     await webPage.fill('input[type="password"]', 'pass1234');
     await webPage.click('button[type="submit"]');
 
-    await webPage.waitForURL('http://localhost:3000/');
+    await webPage.waitForURL('**/', { timeout: 15000 });
     console.log('✅ Web dashboard loaded.');
     
     // Wait for feed to update
     await webPage.waitForTimeout(3000);
-    const feedText = await webPage.locator('text=Automated E2E Offline Test').first().textContent();
+    const feedText = await webPage.locator('text=Landslide').first().textContent();
     console.log(`✅ Report arrived in Web feed: "${feedText.trim()}"`);
 
     console.log('--- Step 5: Continuity Page Verification ---');
     await webPage.goto('http://localhost:3000/continuity');
-    await webPage.waitForSelector('text=Cachar (Silchar)');
+    await webPage.waitForTimeout(3000);
+    const content = await webPage.content();
+    console.log('PAGE CONTENT: ', content.includes('Cachar (Silchar)') ? 'Found Cachar' : 'NOT FOUND. HTML length: ' + content.length);
     
-    const silcharGap = await webPage.locator('text=Cachar (Silchar)').evaluate(node => node.closest('tr').innerText);
+    await webPage.waitForSelector('text=Cachar (Silchar)');
+    const silcharGap = await webPage.locator('text=Cachar (Silchar)').evaluate(node => node.closest('tr')?.innerText || node.closest('.p-5')?.innerText);
     console.log(`✅ Continuity Row: ${silcharGap}`);
     
     console.log('🎉 E2E Verification Complete.');

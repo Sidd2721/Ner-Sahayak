@@ -36,7 +36,10 @@ async function seed() {
   await db.collection('districts').doc('cachar-silchar').set({
     name: 'Cachar (Silchar)',
     connectivityStatus: 'connected',
-    continuityGap: 4
+    continuityGap: 4,
+    currentRiskScore: 0.15,
+    stockBufferDays: 10,
+    lastUpdated: new Date().toISOString()
   });
   await db.collection('corridors').doc('nh-27').set({
     status: 'open'
