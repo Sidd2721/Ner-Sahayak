@@ -45,6 +45,16 @@ interface EonetEvent {
   geometry: { date: string; coordinates: [number, number] }[];
 }
 
+const getTimeAgo = (isoString: string) => {
+  const diff = Date.now() - new Date(isoString).getTime();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  if (hours === 0) {
+    const minutes = Math.floor(diff / (1000 * 60));
+    return `${minutes} minutes ago`;
+  }
+  return `${hours} hours ago`;
+};
+
 export default function CorridorMap() {
   const [events, setEvents] = useState<EonetEvent[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
@@ -81,16 +91,6 @@ export default function CorridorMap() {
 
   const center: [number, number] = [25.158, 93.01]; // Haflong approx
   const polylineCoords: [number, number][] = NH27_CORRIDOR.waypoints.map(wp => [wp.lat, wp.lng]);
-
-  const getTimeAgo = (isoString: string) => {
-    const diff = Date.now() - new Date(isoString).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours === 0) {
-      const minutes = Math.floor(diff / (1000 * 60));
-      return `${minutes} minutes ago`;
-    }
-    return `${hours} hours ago`;
-  };
 
   return (
     <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-gray-200 shadow-sm z-0 mb-8">

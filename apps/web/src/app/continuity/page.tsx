@@ -9,6 +9,25 @@ import { riskCategory, CLOSURE_DAYS_BY_CATEGORY } from '@shared/risk/calcRisk';
 import type { District } from '@shared/schemas/district';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white p-4 border border-gray-100 shadow-lg rounded-xl">
+        <p className="font-semibold text-gray-900 mb-2">{label}</p>
+        <div className="space-y-1 text-sm">
+          <p className="text-emerald-600">Buffer Stock: {data.stockBufferDays} days</p>
+          <p className="text-amber-600">Expected Closure: {data.expectedClosureDays} days</p>
+          <div className="pt-2 mt-2 border-t border-gray-50">
+            <p className="font-medium text-red-600">Continuity Gap: {data.expectedClosureDays - data.stockBufferDays} days</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function ContinuityPage() {
   const { user } = useAuth();
   const [districts, setDistricts] = useState<District[]>([]);
@@ -48,24 +67,6 @@ export default function ContinuityPage() {
       continuityGap: gap
     };
   });
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg">
-          <p className="font-bold mb-2">{data.fullName}</p>
-          <p className="text-sm text-green-700">Buffer Stock: {data.stockBufferDays} days</p>
-          <p className="text-sm text-red-700">Expected Closure: {data.expectedClosureDays} days</p>
-          <hr className="my-2" />
-          <p className={`text-sm font-bold ${data.continuityGap < 0 ? 'text-red-600' : 'text-green-600'}`}>
-            Continuity Gap: {data.continuityGap > 0 ? '+' : ''}{data.continuityGap} days
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="p-8 max-w-7xl mx-auto">

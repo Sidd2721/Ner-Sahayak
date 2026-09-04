@@ -22,7 +22,7 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [stats, setStats] = useState({ active: 0, resolved: 0, critical: 0 });
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<Record<string, unknown>[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -51,17 +51,27 @@ export default function Dashboard() {
       });
 
       // Group for chart data
-      const aggregated: Record<string, any> = {};
+      interface ChartData {
+        type: string;
+        'Sev 1': number;
+        'Sev 2': number;
+        'Sev 3': number;
+        'Sev 4': number;
+        'Sev 5': number;
+        [key: string]: unknown;
+      }
+      const aggregated: Record<string, ChartData> = {};
       newReports.forEach(r => {
         if (!aggregated[r.type]) {
           aggregated[r.type] = { type: r.type.replace('-', ' '), 'Sev 1': 0, 'Sev 2': 0, 'Sev 3': 0, 'Sev 4': 0, 'Sev 5': 0 };
         }
-        aggregated[r.type][`Sev ${r.severity}`] += 1;
+        const key = `Sev ${r.severity}` as keyof Omit<ChartData, 'type'>;
+        (aggregated[r.type][key] as number) += 1;
       });
 
       setReports(newReports);
       setStats({ active, resolved, critical });
-      setChartData(Object.values(aggregated));
+      setChartData(Object.values(aggregated) as Record<string, unknown>[]);
     });
 
     return () => unsubscribe();
