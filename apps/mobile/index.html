@@ -307,11 +307,33 @@
       
       <label>Photo Evidence (Optional)</label>
       <input type="file" id="report-photo" accept="image/*" capture="environment" style="background: transparent; border: none; padding: 0.5rem 0;" />
+      <img id="photo-preview" src="" alt="Photo preview" style="display:none; width:100%; max-height:180px; object-fit:cover; border-radius:10px; margin-bottom:1rem; border:1px solid var(--glass-border);" />
 
       <label>Details</label>
       <textarea id="report-desc" placeholder="Describe the incident..." rows="3"></textarea>
+
+      <!-- GPS status: shown live as location is captured, non-blocking -->
+      <div id="gps-status" style="margin-bottom:1.2rem; font-size:0.82rem; color:var(--text-muted); display:flex; align-items:center; gap:0.5rem;">
+        <span id="gps-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#64748b; flex-shrink:0;"></span>
+        <span id="gps-label">📍 Waiting for GPS...</span>
+      </div>
       
-      <button id="report-submit">Submit Offline Report</button>
+      <button id="report-submit">Submit Report</button>
+    </div>
+  </div>
+
+  <!-- Confirmation card: shown after successful submit, hidden otherwise -->
+  <div id="confirm-overlay" class="container hidden" style="position:fixed; inset:0; background:rgba(11,18,32,0.95); z-index:999; display:flex; align-items:center; justify-content:center; padding:1.2rem;">
+    <div class="glass-card" style="width:100%; max-width:480px; margin:0;">
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">✅</div>
+        <h2 style="margin:0; color:white; font-size:1.3rem;">Report Filed</h2>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin:0.5rem 0 0;">Stored locally — will sync when online</p>
+      </div>
+      <img id="confirm-photo" src="" alt="" style="display:none; width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin-bottom:1rem; border:1px solid var(--glass-border);" />
+      <div id="confirm-details" style="background:rgba(0,0,0,0.2); border-radius:12px; padding:1rem; margin-bottom:1.2rem; font-size:0.875rem; line-height:1.7; color:var(--text-muted);"></div>
+      <button id="confirm-share" style="margin-bottom:0.75rem;">📤 Share Report</button>
+      <button id="confirm-close" style="background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); box-shadow:none;">Back to App</button>
     </div>
   </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { collection, query, orderBy, onSnapshot, Timestamp, where } from 'firebase/firestore';
+import { useEffect, useState, useRef } from 'react';
+import { collection, query, orderBy, onSnapshot, Timestamp, doc, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/AuthProvider';
 
@@ -11,8 +11,66 @@ interface Report {
   status: string;
   severity: number;
   corridorId: string;
-  createdAt: Timestamp;
+  description?: string;
+  lat?: number;
+  lng?: number;
+  reporterId?: string;
   photoUrl?: string;
+  createdAt: Timestamp;
+}
+
+// Reports submitted within this many ms are considered "new" and get a badge
+const NEW_THRESHOLD_MS = 60_000;
+
+function isNew(report: Report): boolean {
+  if (!report.createdAt) return false;
+  const ts = report.createdAt?.toDate ? report.createdAt.toDate().getTime() : new Date(report.createdAt as unknown as string).getTime();
+  return Date.now() - ts < NEW_THRESHOLD_MS;
+}
+
+function toTimestamp(r: Report): number {
+  if (!r.createdAt) return 0;
+  return r.createdAt?.toDate ? r.createdAt.toDate().getTime() : new Date(r.createdAt as unknown as string).getTime();
+}
+
+function formatTime(report: Report): string {
+  const ts = toTimestamp(report);
+  if (!ts) return 'Unknown';
+  return new Date(ts).toLocaleString();
+}
+
+// ── Toast notification ────────────────────────────────────────────────────────
+interface Toast { id: number; report: Report }
+
+function ToastBanner({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number) => void }) {
+  const typeLabel = toast.report.type.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  useEffect(() => {
+    const t = setTimeout(() => onDismiss(toast.id), 8000);
+    return () => clearTimeout(t);
+  }, [toast.id, onDismiss]);
+
+  return (
+    <div className="flex items-center gap-3 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg mb-2 animate-pulse">
+      <span className="text-xl">🚨</span>
+      <div className="flex-1">
+        <div className="font-semibold text-sm">NEW REPORT — {typeLabel}</div>
+        <div className="text-xs opacity-80">Severity {toast.report.severity}/5 · {toast.report.corridorId?.toUpperCase()}</div>
+      </div>
+      <button onClick={() => onDismiss(toast.id)} className="text-white opacity-70 hover:opacity-100 text-lg leading-none">×</button>
+    </div>
+  );
+}
+
+// ── Photo modal ───────────────────────────────────────────────────────────────
+function PhotoModal({ url, onClose }: { url: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={onClose}>
+      <div className="relative max-w-2xl w-full mx-4" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} className="absolute -top-10 right-0 text-white text-3xl leading-none">×</button>
+        <img src={url} alt="Incident photo" className="w-full rounded-xl shadow-2xl" />
+      </div>
+    </div>
+  );
 }
 
 export default function ReportsPage() {
@@ -20,6 +78,13 @@ export default function ReportsPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [loading, setLoading] = useState(true);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [photoModal, setPhotoModal] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const prevIdsRef = useRef<Set<string>>(new Set());
+  const toastCounterRef = useRef(0);
+
+  const dismissToast = (id: number) => setToasts(t => t.filter(x => x.id !== id));
 
   useEffect(() => {
     if (!user) return;
@@ -34,37 +99,76 @@ export default function ReportsPage() {
         orderBy('createdAt', 'desc')
       );
     }
-    
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Report[];
+      const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Report[];
+
+      // Detect genuinely new reports (not in previous snapshot) for toast
+      const newOnes = data.filter(r => !prevIdsRef.current.has(r.id) && isNew(r));
+      if (newOnes.length > 0 && prevIdsRef.current.size > 0) {
+        // Only show toasts after initial load (prevIds populated)
+        setToasts(prev => [
+          ...newOnes.map(r => ({ id: ++toastCounterRef.current, report: r })),
+          ...prev,
+        ]);
+      }
+      prevIdsRef.current = new Set(data.map(r => r.id));
+
       setReports(data);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [user, filterStatus]); // Add filterStatus to dependency array
+  }, [user, filterStatus]);
+
+  const updateStatus = async (reportId: string, status: string) => {
+    setUpdatingId(reportId);
+    try {
+      await updateDoc(doc(db, 'reports', reportId), { status });
+    } catch (e) {
+      alert('Failed to update status: ' + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const shareReport = (report: Report) => {
+    const typeLabel = report.type.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const locStr = (report.lat != null && report.lng != null)
+      ? `${report.lat.toFixed(5)}, ${report.lng.toFixed(5)}`
+      : 'Unknown';
+    const text =
+      `🚨 NER Sahayak Incident Report\n` +
+      `Type: ${typeLabel}\n` +
+      `Severity: ${report.severity}/5\n` +
+      `Description: ${report.description || 'N/A'}\n` +
+      `Location: ${locStr}\n` +
+      `Status: ${report.status}\n` +
+      `Time: ${formatTime(report)}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, '_blank');
+  };
 
   if (!user) return null;
 
-  const filteredReports = reports;
-
-
   return (
     <div className="p-8 max-w-7xl mx-auto">
+      {/* Toast notifications — top right, stack */}
+      <div className="fixed top-4 right-4 z-50 w-80">
+        {toasts.map(t => <ToastBanner key={t.id} toast={t} onDismiss={dismissToast} />)}
+      </div>
+
+      {photoModal && <PhotoModal url={photoModal} onClose={() => setPhotoModal(null)} />}
+
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Incident Reports</h1>
-        
+
         <div className="flex items-center gap-3">
-          <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">
-            Filter Status:
-          </label>
+          <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">Filter Status:</label>
           <select
             id="status-filter"
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)} /* Bug Fix #5: Use filterStatus instead of status */
+            onChange={(e) => setFilterStatus(e.target.value)}
             className="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2 border outline-none"
           >
             <option value="all">All Incidents</option>
@@ -83,55 +187,77 @@ export default function ReportsPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Type / ID
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Photo
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Severity
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Reported At
-                  </th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type / ID</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GPS Location</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sev</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredReports.length === 0 ? (
+                {reports.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                      No reports found.
-                    </td>
+                    <td colSpan={8} className="px-6 py-8 text-center text-gray-500">No reports found.</td>
                   </tr>
                 ) : (
-                  filteredReports.map((report) => (
-                    <tr key={report.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 capitalize">
-                          {report.type.replace('-', ' ')}
-                        </div>
-                        <div className="text-sm text-gray-500 font-mono">
-                          {report.id.substring(0, 8)}...
+                  reports.map((report) => (
+                    <tr key={report.id} className={`hover:bg-gray-50 transition-colors ${isNew(report) ? 'bg-red-50' : ''}`}>
+                      {/* Type / ID */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          {isNew(report) && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-bold bg-red-600 text-white animate-pulse">NEW</span>
+                          )}
+                          <div>
+                            <div className="text-sm font-medium text-gray-900 capitalize">{report.type.replace(/-/g, ' ')}</div>
+                            <div className="text-xs text-gray-400 font-mono">{report.id.substring(0, 8)}…</div>
+                          </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {report.corridorId.toUpperCase()}
+
+                      {/* GPS — clickable Google Maps link */}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm">
+                        {(report.lat != null && report.lng != null) ? (
+                          <a
+                            href={`https://www.google.com/maps?q=${report.lat},${report.lng}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 hover:underline font-mono text-xs"
+                          >
+                            {report.lat.toFixed(4)}, {report.lng.toFixed(4)}
+                          </a>
+                        ) : (
+                          <span className="text-gray-400 text-xs">No GPS</span>
+                        )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+
+                      {/* Photo — thumbnail, click to full-screen modal */}
+                      <td className="px-4 py-4 whitespace-nowrap">
                         {report.photoUrl ? (
-                          <img src={report.photoUrl} alt="Incident photo" className="h-10 w-10 rounded object-cover border border-gray-200" />
+                          <button onClick={() => setPhotoModal(report.photoUrl!)} className="focus:outline-none">
+                            <img
+                              src={report.photoUrl}
+                              alt="Incident"
+                              className="h-10 w-10 rounded object-cover border border-gray-200 hover:ring-2 hover:ring-blue-400 transition-all"
+                            />
+                          </button>
                         ) : (
                           <span className="text-xs text-gray-400">None</span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+
+                      {/* Description */}
+                      <td className="px-4 py-4 max-w-xs">
+                        <div className="text-sm text-gray-700 truncate" title={report.description}>
+                          {report.description || <span className="text-gray-400 italic">No description</span>}
+                        </div>
+                      </td>
+
+                      {/* Severity */}
+                      <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className={`h-2.5 w-2.5 rounded-full mr-2 ${
                             report.severity >= 4 ? 'bg-red-500' :
@@ -140,8 +266,10 @@ export default function ReportsPage() {
                           <span className="text-sm text-gray-900">{report.severity}/5</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2.5 py-0.5 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${
+
+                      {/* Status badge */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-0.5 inline-flex items-center gap-1 text-xs font-semibold rounded-full ${
                           report.status === 'resolved' ? 'bg-green-100 text-green-800' :
                           report.status === 'confirmed' ? 'bg-orange-100 text-orange-800' :
                           'bg-gray-100 text-gray-800'
@@ -149,8 +277,40 @@ export default function ReportsPage() {
                           {report.status === 'resolved' ? '🟢' : report.status === 'confirmed' ? '🟠' : '⚪'} {report.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {report.createdAt?.toDate ? report.createdAt.toDate().toLocaleString() : report.createdAt ? new Date(report.createdAt as unknown as string).toLocaleString() : 'Unknown'}
+
+                      {/* Time */}
+                      <td className="px-4 py-4 whitespace-nowrap text-xs text-gray-500">
+                        {formatTime(report)}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex flex-col gap-1">
+                          {report.status === 'unconfirmed' && (
+                            <button
+                              onClick={() => updateStatus(report.id, 'confirmed')}
+                              disabled={updatingId === report.id}
+                              className="text-xs px-2 py-1 bg-orange-100 text-orange-800 rounded hover:bg-orange-200 transition-colors disabled:opacity-50"
+                            >
+                              Confirm
+                            </button>
+                          )}
+                          {report.status !== 'resolved' && (
+                            <button
+                              onClick={() => updateStatus(report.id, 'resolved')}
+                              disabled={updatingId === report.id}
+                              className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 transition-colors disabled:opacity-50"
+                            >
+                              Resolve
+                            </button>
+                          )}
+                          <button
+                            onClick={() => shareReport(report)}
+                            className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
+                          >
+                            📤 Share
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

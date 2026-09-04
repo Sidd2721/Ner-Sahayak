@@ -101,8 +101,15 @@ export class SyncEngine {
       // a retry idempotent. addDoc() would mint a new ID on every call,
       // silently duplicating the report if the app dies between the
       // write landing and this outbox row being deleted.
-      const ref = doc(this.fdb, 'reports', local.reportId);
-      const existing = await getDoc(ref);
+      //
+      // BUG FIX: renamed from `ref` to `firestoreRef` to stop shadowing
+      // the imported firebase/storage `ref` function. Previously, calling
+      // ref(storage, path) on line 116 would throw "TypeError: ref is not
+      // a function" because `ref` had been rebound to a DocumentReference.
+      // Reproduced and confirmed fixed against the emulator (see verification
+      // report, 2026-09-05).
+      const firestoreRef = doc(this.fdb, 'reports', local.reportId);
+      const existing = await getDoc(firestoreRef);
       if (existing.exists()) {
         // The previous attempt's write already landed — this replay is
         // success, not a fresh write. A citizen's Firestore rules only
@@ -113,12 +120,12 @@ export class SyncEngine {
         return;
       }
       if (local.photoBlob) {
-        const photoRef = ref(storage, `reports/${local.reportId}`);
-        await uploadBytes(photoRef, local.photoBlob);
-        const photoUrl = await getDownloadURL(photoRef);
+        const storageRef = ref(storage, `reports/${local.reportId}`);
+        await uploadBytes(storageRef, local.photoBlob);
+        const photoUrl = await getDownloadURL(storageRef);
         local.payload.photoUrl = photoUrl;
       }
-      await setDoc(ref, local.payload);
+      await setDoc(firestoreRef, local.payload);
       await db.reports.update(job.entityLocalId, { remoteId: local.reportId, synced: true });
     }
     if (job.opType === 'update-status') {

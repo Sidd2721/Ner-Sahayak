@@ -5,6 +5,8 @@ import { MapContainer, TileLayer, LayersControl, Polyline, Marker, Popup, Toolti
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { NH27_CORRIDOR } from '@shared/constants/corridors';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 // Fix Leaflet's default icon issue with Next.js/Turbopack
 const defaultIcon = L.icon({
@@ -45,6 +47,29 @@ interface EonetEvent {
   geometry: { date: string; coordinates: [number, number] }[];
 }
 
+interface IncidentReport {
+  id: string;
+  type: string;
+  severity: number;
+  description?: string;
+  status: string;
+  lat?: number;
+  lng?: number;
+  reporterId?: string;
+  createdAt?: { toDate?: () => Date } | string;
+}
+
+// Severity-coded incident pin icons
+function incidentIcon(severity: number) {
+  const color = severity >= 4 ? '#dc2626' : severity >= 3 ? '#d97706' : '#2563eb';
+  return L.divIcon({
+    className: 'incident-marker',
+    html: `<div style="width:18px;height:18px;background:${color};border-radius:50%;border:2.5px solid white;box-shadow:0 0 8px ${color}88;"></div>`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+  });
+}
+
 const getTimeAgo = (isoString: string) => {
   const diff = Date.now() - new Date(isoString).getTime();
   const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -59,6 +84,7 @@ export default function CorridorMap() {
   const [events, setEvents] = useState<EonetEvent[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [isOffline, setIsOffline] = useState(false);
+  const [incidents, setIncidents] = useState<IncidentReport[]>([]);
 
   useEffect(() => {
     async function fetchOsint() {
@@ -87,6 +113,23 @@ export default function CorridorMap() {
     }
 
     fetchOsint();
+  }, []);
+
+  // Real-time Firestore subscription for incident reports with GPS data
+  useEffect(() => {
+    // Only subscribe when db is available (client-side)
+    if (!db) return;
+    const q = query(
+      collection(db, 'reports'),
+      where('lat', '!=', null)
+    );
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const data = snap.docs
+        .map(d => ({ id: d.id, ...d.data() } as IncidentReport))
+        .filter(r => r.lat != null && r.lng != null);
+      setIncidents(data);
+    }, () => { /* ignore errors — map still shows without incident layer */ });
+    return () => unsubscribe();
   }, []);
 
   const center: [number, number] = [25.158, 93.01]; // Haflong approx
@@ -143,6 +186,39 @@ export default function CorridorMap() {
                 <div className="font-semibold text-gray-900">{event.title}</div>
                 <div className="text-sm text-gray-500">Observed: {date}</div>
                 <div className="text-xs text-red-600 mt-1 uppercase tracking-wide font-bold">Live OSINT Data</div>
+              </Popup>
+            </Marker>
+          );
+        })}
+
+        {/* Live incident report pins from Firestore — real-time, color-coded by severity */}
+        {incidents.map((report) => {
+          const typeLabel = report.type.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          const mapsUrl = `https://www.google.com/maps?q=${report.lat},${report.lng}`;
+          const createdStr = (() => {
+            if (!report.createdAt) return 'Unknown';
+            if (typeof report.createdAt === 'object' && report.createdAt.toDate) {
+              return report.createdAt.toDate().toLocaleString();
+            }
+            return new Date(report.createdAt as string).toLocaleString();
+          })();
+          return (
+            <Marker key={report.id} position={[report.lat!, report.lng!]} icon={incidentIcon(report.severity)}>
+              <Popup minWidth={200}>
+                <div className="text-xs space-y-1">
+                  <div className="font-bold text-gray-900 text-sm">{typeLabel}</div>
+                  <div><span className="font-semibold">Severity:</span> {report.severity}/5</div>
+                  {report.description && <div><span className="font-semibold">Details:</span> {report.description}</div>}
+                  <div>
+                    <span className="font-semibold">GPS:</span>{' '}
+                    <a href={mapsUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline">
+                      {report.lat!.toFixed(4)}, {report.lng!.toFixed(4)}
+                    </a>
+                  </div>
+                  <div><span className="font-semibold">Status:</span> {report.status}</div>
+                  <div><span className="font-semibold">Filed:</span> {createdStr}</div>
+                  <div className="pt-1 text-red-600 font-bold uppercase tracking-wide">🔴 Live Incident</div>
+                </div>
               </Popup>
             </Marker>
           );
