@@ -3,7 +3,8 @@ services:
     name: ner-sahayak-dashboard
     env: node
     # Run the build from the repository root so NPM workspaces work perfectly
-    buildCommand: npm install && npm run build -w web
+    # We must remove package-lock.json first because of an NPM bug with Tailwind v4 optional native dependencies on Linux
+    buildCommand: rm -f package-lock.json && npm install && npm run build -w web
     # Start the Next.js production server
     startCommand: npm run start -w web
     envVars:
