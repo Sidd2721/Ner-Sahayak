@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: ner-sahayak-dashboard
+    env: node
+    # Run the build from the repository root so NPM workspaces work perfectly
+    buildCommand: npm install && npm run build -w web
+    # Start the Next.js production server
+    startCommand: npm run start -w web
+    envVars:
+      # Force Render to use a modern Node version required by Next.js
+      - key: NODE_VERSION
+        value: 20
+      
+      # Point to live Firebase instead of emulator
+      - key: NEXT_PUBLIC_USE_EMULATOR
+        value: "false"
+        
+      # These keys will be securely prompted in the Render dashboard when you deploy
+      - key: NEXT_PUBLIC_FIREBASE_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_APP_ID
+        sync: false
