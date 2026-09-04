@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
 import { fdb } from './firebase.js';
 import { db } from './db.js';
@@ -40,6 +40,16 @@ export async function demoLogin(auth, fdb) {
     await setDoc(doc(fdb, 'users', credential.user.uid), { role: 'citizen' });
     return credential;
   }
+}
+
+export async function googleLogin(auth, fdb) {
+  const provider = new GoogleAuthProvider();
+  const credential = await signInWithPopup(auth, provider);
+  const userDoc = await getDoc(doc(fdb, 'users', credential.user.uid));
+  if (!userDoc.exists()) {
+    await setDoc(doc(fdb, 'users', credential.user.uid), { role: 'citizen', email: credential.user.email });
+  }
+  return credential;
 }
 
 export async function getCachedRole() {

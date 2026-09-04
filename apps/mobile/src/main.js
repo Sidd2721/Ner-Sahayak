@@ -1,7 +1,7 @@
 import { auth, fdb } from './firebase.js';
 import { onSnapshot, doc, collection } from 'firebase/firestore';
 
-import { initAuth, login, demoLogin } from './auth.js';
+import { initAuth, login, demoLogin, googleLogin } from './auth.js';
 import { SyncEngine } from './sync.js';
 import { submitReport } from './report-form.js';
 import { renderStatusBoard, subscribeCorridorUpdates } from './status-board.js';
@@ -81,6 +81,14 @@ document.getElementById('auth-demo').addEventListener('click', async () => {
     await demoLogin(auth, fdb);
   } catch (e) {
     alert('Demo Login failed: ' + e.message);
+  }
+});
+
+document.getElementById('auth-google').addEventListener('click', async () => {
+  try {
+    await googleLogin(auth, fdb);
+  } catch (e) {
+    alert('Google Login failed: ' + e.message);
   }
 });
 
