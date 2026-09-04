@@ -92,8 +92,8 @@ export default function ContinuityPage() {
                 <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} tick={{ fill: '#4b5563', fontSize: 13, fontWeight: 500 }} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f9fafb' }} />
                 <Legend wrapperStyle={{ paddingTop: '10px' }} />
-                <Bar dataKey="stockBufferDays" name="Buffer Stock (Days)" fill="#10B981" barSize={20} isAnimationActive={true} />
-                <Bar dataKey="expectedClosureDays" name="Expected Closure (Days)" fill="url(#closureGradient)" barSize={20} isAnimationActive={true} />
+                <Bar dataKey="stockBufferDays" name="Buffer Stock (Days)" fill="#10B981" barSize={20} isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="expectedClosureDays" name="Expected Closure (Days)" fill="url(#closureGradient)" barSize={20} isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

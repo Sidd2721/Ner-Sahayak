@@ -40,7 +40,7 @@ export async function renderStatusBoard() {
             ${filter}
             data-target="${targetOffset}"
           />
-          <text x="50" y="47" class="gauge-text-score">${(score * 100).toFixed(0)}</text>
+          <text id="gauge-text-${i}" x="50" y="47" class="gauge-text-score" data-score="${score * 100}">0</text>
           <text x="50" y="68" class="gauge-text-label">RISK</text>
         </svg>
         <span class="gauge-name">${shortName}</span>
@@ -53,8 +53,32 @@ export async function renderStatusBoard() {
     requestAnimationFrame(() => {
       districts.forEach((d, i) => {
         const arc = document.getElementById(`gauge-arc-${i}`);
-        if (arc) {
+        const textElement = document.getElementById(`gauge-text-${i}`);
+        if (arc && textElement) {
+          // Animate the stroke
           arc.style.strokeDashoffset = arc.getAttribute('data-target');
+          
+          // Animate the number counting up
+          const targetScore = parseFloat(textElement.getAttribute('data-score'));
+          const duration = 1500; // matches CSS transition 1.5s
+          const startTime = performance.now();
+          
+          const animateText = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out cubic
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            
+            textElement.textContent = Math.round(easeProgress * targetScore);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateText);
+            } else {
+              textElement.textContent = Math.round(targetScore);
+            }
+          };
+          
+          requestAnimationFrame(animateText);
         }
       });
     });

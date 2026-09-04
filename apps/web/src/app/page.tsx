@@ -118,11 +118,11 @@ export default function Dashboard() {
               <YAxis tickLine={false} axisLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} allowDecimals={false} />
               <Tooltip cursor={{ fill: '#f9fafb' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
               <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-              <Bar dataKey="Sev 1" stackId="a" fill="#15803D" isAnimationActive={true} />
-              <Bar dataKey="Sev 2" stackId="a" fill="#22C55E" isAnimationActive={true} />
-              <Bar dataKey="Sev 3" stackId="a" fill="#F59E0B" isAnimationActive={true} />
-              <Bar dataKey="Sev 4" stackId="a" fill="#EF4444" isAnimationActive={true} />
-              <Bar dataKey="Sev 5" stackId="a" fill="#991B1B" isAnimationActive={true} />
+              <Bar dataKey="Sev 1" stackId="a" fill="#15803D" isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" radius={[0, 0, 4, 4]} />
+              <Bar dataKey="Sev 2" stackId="a" fill="#22C55E" isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" />
+              <Bar dataKey="Sev 3" stackId="a" fill="#F59E0B" isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" />
+              <Bar dataKey="Sev 4" stackId="a" fill="#EF4444" isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" />
+              <Bar dataKey="Sev 5" stackId="a" fill="#991B1B" isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}
