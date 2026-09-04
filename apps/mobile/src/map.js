@@ -71,13 +71,21 @@ export function startLiveLocationTracking() {
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
 
+    // Surface the fix's own timestamp (recency check: a redrawn stale
+    // reading shows an old time here; a live one tracks the clock) and
+    // expose the last fix for on-device verification via the console.
+    const fixTime = new Date(pos.timestamp).toLocaleTimeString();
+    const popupHtml = `You are here<br>Fix: ${fixTime}`;
+    window.__lastLiveFix = { lat, lng, timestamp: pos.timestamp };
+
     if (!map) return; // Map not initialized yet
 
     if (userMarker) {
       userMarker.setLatLng([lat, lng]);
+      userMarker.setPopupContent(popupHtml);
     } else {
       userMarker = L.circleMarker([lat, lng], { color: '#22c55e', radius: 8 })
-        .bindPopup('You are here')
+        .bindPopup(popupHtml)
         .addTo(map);
     }
   }, (err) => {

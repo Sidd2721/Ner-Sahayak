@@ -1,11 +1,12 @@
 import { auth, fdb } from './firebase.js';
 import { onSnapshot, doc, collection } from 'firebase/firestore';
 
-import { initAuth, login } from './auth.js';
+import { initAuth, login, demoLogin } from './auth.js';
 import { SyncEngine } from './sync.js';
 import { submitReport } from './report-form.js';
 import { renderStatusBoard, subscribeCorridorUpdates } from './status-board.js';
 import { renderCorridorMap, startLiveLocationTracking } from './map.js';
+import { initSafeRouteButton, updateSafeRouteButton } from './safe-route.js';
 import { setLanguage, getLanguage, t } from './i18n.js';
 import { plainLanguageRisk } from './risk.js';
 
@@ -34,6 +35,7 @@ function updateTranslations() {
   document.getElementById('report-title').textContent = t('report.title') || 'Submit Report';
   document.getElementById('severity-label').textContent = t('report.severity') || 'Severity (1-5)';
   reportSubmit.textContent = t('report.submit') || 'Submit Offline Report';
+  updateSafeRouteButton(); // refresh the local-label button on language change
   updateRiskPreview();
 }
 
@@ -52,7 +54,10 @@ initAuth(auth, (user) => {
     });
     
     subscribeCorridorUpdates(fdb, onSnapshot, collection, doc);
-    renderCorridorMap().then(() => startLiveLocationTracking());
+    renderCorridorMap().then(() => {
+      startLiveLocationTracking();
+      initSafeRouteButton(); // online-only "Find Safe Route" (hidden entirely when offline)
+    });
   } else {
     authView.classList.remove('hidden');
     appView.classList.add('hidden');
@@ -68,6 +73,14 @@ authSubmit.addEventListener('click', async () => {
     } catch (e) {
       alert('Login failed: ' + e.message);
     }
+  }
+});
+
+document.getElementById('auth-demo').addEventListener('click', async () => {
+  try {
+    await demoLogin(auth, fdb);
+  } catch (e) {
+    alert('Demo Login failed: ' + e.message);
   }
 });
 

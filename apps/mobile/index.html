@@ -228,14 +228,21 @@
       
       <input type="email" id="auth-email" placeholder="Email Address" />
       <input type="password" id="auth-pass" placeholder="Password" />
-      <button id="auth-submit">Login ➔</button>
+      <button id="auth-submit" style="margin-bottom: 1rem;">Login ➔</button>
+      <div style="text-align: center; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem;">OR</div>
+      <button id="auth-demo" style="background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); box-shadow: none;">Quick Login (Demo)</button>
     </div>
   </div>
 
   <div id="app-view" class="container hidden">
     <section class="glass-card">
       <h2 id="status-title">Live Incident Map</h2>
-      <div id="map-container" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 1.5rem; z-index: 1; border: 1px solid var(--glass-border);"></div>
+      <div id="map-container" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 0.75rem; z-index: 1; border: 1px solid var(--glass-border);"></div>
+      <style>
+        .safe-route-btn { width: 100%; margin-bottom: 0.5rem; }
+        .safe-route-btn[hidden] { display: none; }
+        .safe-route-status { display: block; text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; min-height: 1.1em; }
+      </style>
       <div id="status-board">
         <!-- Rendered from local Dexie -->
         <div style="padding:1rem; text-align:center; color:var(--text-muted);">Loading status...</div>
