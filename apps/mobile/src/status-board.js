@@ -12,13 +12,77 @@ export async function renderStatusBoard() {
     return;
   }
 
-  el.innerHTML = districts.map((d) => `
-    <div class="district-row status-${d.connectivityStatus ? d.connectivityStatus.toLowerCase() : 'ok'}">
-      <span>${d.id}</span>
-      <span>${d.connectivityStatus || 'OK'}</span>
-      <span>${d.continuityGap || 0}d gap</span>
-    </div>
-  `).join('');
+  el.innerHTML = districts.map((d, i) => {
+    const score = d.currentRiskScore || 0;
+    const isCritical = score >= 0.7;
+    const isWatch = score >= 0.3 && score < 0.7;
+    const color = isCritical ? 'var(--signal-critical)' : (isWatch ? 'var(--signal-watch)' : 'var(--signal-clear)');
+    const filter = isCritical ? 'filter="drop-shadow(0 0 4px #ef4444)"' : '';
+    
+    // Circle r=40, circumference = 2 * PI * 40 = 251.2
+    const circumference = 251.2;
+    const targetOffset = circumference * (1 - score);
+    
+    const shortName = d.id === 'dima-hasao' ? 'Dima Hasao' : (d.id === 'cachar' ? 'Cachar' : d.id);
+    
+    return `
+      <div class="gauge-container">
+        <svg viewBox="0 0 100 100" width="100" height="100">
+          <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--glass-border)" stroke-width="8" transform="rotate(-90 50 50)" />
+          <circle 
+            class="gauge-arc" id="gauge-arc-${i}"
+            cx="50" cy="50" r="40" fill="transparent" 
+            stroke="${color}" stroke-width="8" 
+            stroke-dasharray="${circumference}" 
+            stroke-dashoffset="${circumference}" 
+            transform="rotate(-90 50 50)"
+            stroke-linecap="round"
+            ${filter}
+            data-target="${targetOffset}"
+          />
+          <text id="gauge-text-${i}" x="50" y="47" class="gauge-text-score" data-score="${score * 100}">0</text>
+          <text x="50" y="68" class="gauge-text-label">RISK</text>
+        </svg>
+        <span class="gauge-name">${shortName}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Trigger animation after DOM flush
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      districts.forEach((d, i) => {
+        const arc = document.getElementById(`gauge-arc-${i}`);
+        const textElement = document.getElementById(`gauge-text-${i}`);
+        if (arc && textElement) {
+          // Animate the stroke
+          arc.style.strokeDashoffset = arc.getAttribute('data-target');
+          
+          // Animate the number counting up
+          const targetScore = parseFloat(textElement.getAttribute('data-score'));
+          const duration = 1500; // matches CSS transition 1.5s
+          const startTime = performance.now();
+          
+          const animateText = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out cubic
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            
+            textElement.textContent = Math.round(easeProgress * targetScore);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateText);
+            } else {
+              textElement.textContent = Math.round(targetScore);
+            }
+          };
+          
+          requestAnimationFrame(animateText);
+        }
+      });
+    });
+  });
 }
 
 export function subscribeCorridorUpdates(fdb, onSnapshot, collection, doc) {

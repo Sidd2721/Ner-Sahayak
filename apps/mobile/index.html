@@ -6,20 +6,26 @@
   <title>NER Sahayak Mobile</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1d4ed8">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
+      --ink: #0B1220;
+      --surface: #141B2E;
+      --signal-critical: #DC2626;
+      --signal-watch: #D97706;
+      --signal-clear: #15803D;
+      --paper: #F1EDE4;
       --primary: #8b5cf6;
       --secondary: #3b82f6;
-      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-main: #f8fafc;
+      --bg-gradient: var(--ink);
+      --glass-bg: var(--surface);
+      --glass-border: rgba(241, 237, 228, 0.1);
+      --text-main: var(--paper);
       --text-muted: #94a3b8;
     }
     
     body {
-      font-family: 'Outfit', -apple-system, sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       margin: 0;
       padding: 0;
       background: var(--bg-gradient);
@@ -33,9 +39,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: var(--surface);
       border-bottom: 1px solid var(--glass-border);
     }
     
@@ -56,8 +60,6 @@
     /* Glassmorphism Card System */
     .glass-card {
       background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
       border-radius: 16px;
       padding: 1.5rem;
@@ -84,9 +86,9 @@
       border-radius: 8px;
       margin-bottom: 0.5rem;
     }
-    .status-critical { border-left: 4px solid #ef4444; }
-    .status-watch { border-left: 4px solid #f97316; }
-    .status-ok { border-left: 4px solid #22c55e; }
+    .status-isolated { border-left: 4px solid var(--signal-critical); }
+    .status-degraded { border-left: 4px solid var(--signal-watch); }
+    .status-connected { border-left: 4px solid var(--signal-clear); }
 
     /* Forms and Inputs */
     input, select, textarea {
@@ -97,7 +99,7 @@
       border: 1px solid var(--glass-border);
       border-radius: 12px;
       color: white;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Inter', sans-serif;
       box-sizing: border-box;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -125,7 +127,7 @@
       padding: 1rem;
       border-radius: 12px;
       font-size: 1.1rem;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 500;
       width: 100%;
       cursor: pointer;
@@ -210,7 +212,7 @@
 </head>
 <body>
   <header>
-    <h1 id="app-title">NER Sahayak</h1>
+    <h1 id="app-title">NER Sahayak (Dima Hasao)</h1>
     <div class="header-controls">
       <span id="pending-badge" class="hidden">Pending Sync</span>
       <select id="lang-select">
@@ -236,17 +238,48 @@
 
   <div id="app-view" class="container hidden">
     <section class="glass-card">
-      <h2 id="status-title">Live Incident Map</h2>
+      <h2 id="status-title">Live Incident Map - NH-27 (Dima Hasao)</h2>
       <div id="map-container" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 0.75rem; z-index: 1; border: 1px solid var(--glass-border);"></div>
       <style>
         .safe-route-btn { width: 100%; margin-bottom: 0.5rem; }
         .safe-route-btn[hidden] { display: none; }
         .safe-route-status { display: block; text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; min-height: 1.1em; }
       </style>
-      <div id="status-board">
+      <div id="status-board" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
         <!-- Rendered from local Dexie -->
         <div style="padding:1rem; text-align:center; color:var(--text-muted);">Loading status...</div>
       </div>
+      <style>
+        .gauge-arc {
+          transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gauge-text-score {
+          font-family: 'IBM Plex Mono', monospace;
+          font-weight: 700;
+          font-size: 22px;
+          fill: var(--text-main);
+          text-anchor: middle;
+          dominant-baseline: mathematical;
+        }
+        .gauge-text-label {
+          font-family: 'Inter', sans-serif;
+          font-weight: 600;
+          font-size: 11px;
+          fill: var(--text-muted);
+          text-anchor: middle;
+        }
+        .gauge-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .gauge-name {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--text-main);
+        }
+      </style>
     </section>
 
     <div class="glass-card" id="report-card">
@@ -263,6 +296,9 @@
       <input type="range" id="report-severity" min="1" max="5" value="3">
       <div id="risk-preview" style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-muted); font-weight: 500;">Moderate Risk</div>
       
+      <label>Photo Evidence (Optional)</label>
+      <input type="file" id="report-photo" accept="image/*" capture="environment" style="background: transparent; border: none; padding: 0.5rem 0;" />
+
       <label>Details</label>
       <textarea id="report-desc" placeholder="Describe the incident..." rows="3"></textarea>
       

@@ -20,7 +20,7 @@ export const REPORT_TYPES = [
   { value: 'other', key: 'report.type.other' },
 ];
 
-export async function submitReport({ type, severity, description }) {
+export async function submitReport({ type, severity, description, photoFile }) {
   const coords = await getCoordinates();
   const user = await getCachedUser();
   const reporterId = user?.uid || 'anonymous';
@@ -49,6 +49,7 @@ export async function submitReport({ type, severity, description }) {
       reportId,
       type, severity, description,
       lat: coords.lat, lng: coords.lng,
+      photoBlob: photoFile,
       status: 'unconfirmed',
       synced: false,
       priorityKey, // kept locally for offline sort/display ordering only

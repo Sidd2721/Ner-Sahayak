@@ -12,6 +12,7 @@ interface Report {
   severity: number;
   corridorId: string;
   createdAt: Timestamp;
+  photoUrl?: string;
 }
 
 export default function ReportsPage() {
@@ -89,6 +90,9 @@ export default function ReportsPage() {
                     Location
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Photo
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Severity
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -102,7 +106,7 @@ export default function ReportsPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredReports.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                       No reports found.
                     </td>
                   </tr>
@@ -121,6 +125,13 @@ export default function ReportsPage() {
                         {report.corridorId.toUpperCase()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
+                        {report.photoUrl ? (
+                          <img src={report.photoUrl} alt="Incident photo" className="h-10 w-10 rounded object-cover border border-gray-200" />
+                        ) : (
+                          <span className="text-xs text-gray-400">None</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className={`h-2.5 w-2.5 rounded-full mr-2 ${
                             report.severity >= 4 ? 'bg-red-500' :
@@ -130,12 +141,12 @@ export default function ReportsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        <span className={`px-2.5 py-0.5 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${
                           report.status === 'resolved' ? 'bg-green-100 text-green-800' :
                           report.status === 'confirmed' ? 'bg-orange-100 text-orange-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {report.status}
+                          {report.status === 'resolved' ? '🟢' : report.status === 'confirmed' ? '🟠' : '⚪'} {report.status}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

@@ -15,6 +15,9 @@ export const DistrictSchema = z.object({
   currentRiskScore: z.number().min(0).max(1),
   /** on-hand essential-goods buffer in days (§4.1) */
   stockBufferDays: z.number().min(0),
+  continuityGap: z.number().optional(),
+  continuityStatus: z.string().optional(),
+  riskCalcAt: z.any().optional(),
   /** ISO 8601 — UI must label scores "as of" this time (§10) */
   lastUpdated: z.string().datetime({ offset: true }),
 });

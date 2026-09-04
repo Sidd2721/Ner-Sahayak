@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
 /**
  * Firebase client init — emulator-first per the build guide.
@@ -23,9 +24,12 @@ export const USE_EMULATOR = String(import.meta.env.VITE_USE_EMULATOR) === 'true'
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const fdb = getFirestore(app);
+export const storage = getStorage(app);
 
 if (USE_EMULATOR) {
+  const emuHost = import.meta.env.VITE_EMULATOR_HOST || '127.0.0.1';
   // idempotent across HMR reloads
-  try { connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true }); } catch { /* already connected */ }
-  try { connectFirestoreEmulator(fdb, '127.0.0.1', 8080); } catch { /* already connected */ }
+  try { connectAuthEmulator(auth, `http://${emuHost}:9099`, { disableWarnings: true }); } catch { /* already connected */ }
+  try { connectFirestoreEmulator(fdb, emuHost, 8080); } catch { /* already connected */ }
+  try { connectStorageEmulator(storage, emuHost, 9199); } catch { /* already connected */ }
 }
