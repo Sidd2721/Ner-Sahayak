@@ -29,10 +29,10 @@ export default function ContinuityPage() {
 
   if (!user) return null;
 
-  const getStatusColor = (status: string) => {
-    if (status === 'OK') return 'bg-green-100 text-green-800 border-green-200';
-    if (status === 'WATCH') return 'bg-orange-100 text-orange-800 border-orange-200';
-    return 'bg-red-100 text-red-800 border-red-200';
+  const getStatusStyle = (status: string) => {
+    if (status === 'OK') return { color: 'bg-green-100 text-green-800 border-green-200', icon: '🟢' };
+    if (status === 'WATCH') return { color: 'bg-orange-100 text-orange-800 border-orange-200', icon: '🟠' };
+    return { color: 'bg-red-100 text-red-800 border-red-200', icon: '🔴' };
   };
 
   return (
@@ -76,8 +76,8 @@ export default function ContinuityPage() {
                         </select>
                       </div>
                     </div>
-                    <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${getStatusColor(status)}`}>
-                      {status}
+                    <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${getStatusStyle(status).color}`}>
+                      {getStatusStyle(status).icon} {status}
                     </span>
                   </div>
                   

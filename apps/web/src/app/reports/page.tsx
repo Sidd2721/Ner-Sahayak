@@ -130,12 +130,12 @@ export default function ReportsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        <span className={`px-2.5 py-0.5 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${
                           report.status === 'resolved' ? 'bg-green-100 text-green-800' :
                           report.status === 'confirmed' ? 'bg-orange-100 text-orange-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {report.status}
+                          {report.status === 'resolved' ? '🟢' : report.status === 'confirmed' ? '🟠' : '⚪'} {report.status}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

@@ -6,20 +6,26 @@
   <title>NER Sahayak Mobile</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1d4ed8">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
+      --ink: #0B1220;
+      --surface: #141B2E;
+      --signal-critical: #DC2626;
+      --signal-watch: #D97706;
+      --signal-clear: #15803D;
+      --paper: #F1EDE4;
       --primary: #8b5cf6;
       --secondary: #3b82f6;
-      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-main: #f8fafc;
+      --bg-gradient: var(--ink);
+      --glass-bg: var(--surface);
+      --glass-border: rgba(241, 237, 228, 0.1);
+      --text-main: var(--paper);
       --text-muted: #94a3b8;
     }
     
     body {
-      font-family: 'Outfit', -apple-system, sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       margin: 0;
       padding: 0;
       background: var(--bg-gradient);
@@ -33,9 +39,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: var(--surface);
       border-bottom: 1px solid var(--glass-border);
     }
     
@@ -56,8 +60,6 @@
     /* Glassmorphism Card System */
     .glass-card {
       background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
       border-radius: 16px;
       padding: 1.5rem;
@@ -84,9 +86,9 @@
       border-radius: 8px;
       margin-bottom: 0.5rem;
     }
-    .status-critical { border-left: 4px solid #ef4444; }
-    .status-watch { border-left: 4px solid #f97316; }
-    .status-ok { border-left: 4px solid #22c55e; }
+    .status-isolated { border-left: 4px solid var(--signal-critical); }
+    .status-degraded { border-left: 4px solid var(--signal-watch); }
+    .status-connected { border-left: 4px solid var(--signal-clear); }
 
     /* Forms and Inputs */
     input, select, textarea {
@@ -97,7 +99,7 @@
       border: 1px solid var(--glass-border);
       border-radius: 12px;
       color: white;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Inter', sans-serif;
       box-sizing: border-box;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -125,7 +127,7 @@
       padding: 1rem;
       border-radius: 12px;
       font-size: 1.1rem;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 500;
       width: 100%;
       cursor: pointer;

@@ -28,13 +28,13 @@ langSelect.addEventListener('change', (e) => {
 });
 
 function updateTranslations() {
-  appTitle.textContent = t('app.title') || 'NER Sahayak';
-  document.getElementById('login-title').textContent = t('login.title') || 'Login';
-  authSubmit.textContent = t('login.submit') || 'Login';
+  appTitle.textContent = t('app.name') || 'NER Sahayak';
+  document.getElementById('login-title').textContent = 'Control Room Login';
+  authSubmit.textContent = 'Login';
   document.getElementById('status-title').textContent = t('status.title') || 'Corridor Status (NH-27)';
   document.getElementById('report-title').textContent = t('report.title') || 'Submit Report';
-  document.getElementById('severity-label').textContent = t('report.severity') || 'Severity (1-5)';
-  reportSubmit.textContent = t('report.submit') || 'Submit Offline Report';
+  document.getElementById('severity-label').textContent = t('report.severityLabel') || 'Severity (1-5)';
+  document.getElementById('report-submit').textContent = t('report.submit') || 'Submit Offline Report';
   updateSafeRouteButton(); // refresh the local-label button on language change
   updateRiskPreview();
 }

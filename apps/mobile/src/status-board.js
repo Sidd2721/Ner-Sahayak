@@ -12,13 +12,19 @@ export async function renderStatusBoard() {
     return;
   }
 
-  el.innerHTML = districts.map((d) => `
-    <div class="district-row status-${d.connectivityStatus ? d.connectivityStatus.toLowerCase() : 'ok'}">
+  el.innerHTML = districts.map((d) => {
+    let icon = '🟢';
+    let label = d.connectivityStatus || 'OK';
+    if (d.connectivityStatus === 'isolated') { icon = '🔴'; }
+    else if (d.connectivityStatus === 'degraded') { icon = '🟠'; }
+    
+    return `
+    <div class="district-row status-${d.connectivityStatus ? d.connectivityStatus.toLowerCase() : 'connected'}">
       <span>${d.id}</span>
-      <span>${d.connectivityStatus || 'OK'}</span>
+      <span>${icon} ${label}</span>
       <span>${d.continuityGap || 0}d gap</span>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 export function subscribeCorridorUpdates(fdb, onSnapshot, collection, doc) {
