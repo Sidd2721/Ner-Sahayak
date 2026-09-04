@@ -12,6 +12,7 @@ interface Report {
   severity: number;
   corridorId: string;
   createdAt: Timestamp;
+  photoUrl?: string;
 }
 
 export default function ReportsPage() {
@@ -89,6 +90,9 @@ export default function ReportsPage() {
                     Location
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Photo
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Severity
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -102,7 +106,7 @@ export default function ReportsPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredReports.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                       No reports found.
                     </td>
                   </tr>
@@ -119,6 +123,13 @@ export default function ReportsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {report.corridorId.toUpperCase()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {report.photoUrl ? (
+                          <img src={report.photoUrl} alt="Incident photo" className="h-10 w-10 rounded object-cover border border-gray-200" />
+                        ) : (
+                          <span className="text-xs text-gray-400">None</span>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">

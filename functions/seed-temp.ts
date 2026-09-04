@@ -45,27 +45,19 @@ async function seed() {
   try {
     const districts = [
       {
-        id: 'cachar-silchar',
+        id: 'dima-hasao',
+        name: 'Dima Hasao (Haflong)',
+        connectivityStatus: 'connected',
+        currentRiskScore: 0.3,
+        stockBufferDays: 14,
+        lastUpdated: '2026-09-02T00:00:00.000Z',
+      },
+      {
+        id: 'cachar',
         name: 'Cachar (Silchar)',
         connectivityStatus: 'connected',
         currentRiskScore: 0.3,
-        stockBufferDays: 4,
-        lastUpdated: '2026-09-02T00:00:00.000Z',
-      },
-      {
-        id: 'hailakandi',
-        name: 'Hailakandi',
-        connectivityStatus: 'connected',
-        currentRiskScore: 0.3,
-        stockBufferDays: 6,
-        lastUpdated: '2026-09-02T00:00:00.000Z',
-      },
-      {
-        id: 'karimganj',
-        name: 'Karimganj',
-        connectivityStatus: 'connected',
-        currentRiskScore: 0.3,
-        stockBufferDays: 9,
+        stockBufferDays: 10,
         lastUpdated: '2026-09-02T00:00:00.000Z',
       },
     ];

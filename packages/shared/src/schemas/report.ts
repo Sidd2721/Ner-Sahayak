@@ -36,10 +36,11 @@ export const REPORT_STATUSES = [
 ] as const;
 
 export const ReportSchema = z.object({
-  id: z.string().min(1),
+  reportId: z.string().min(1),
   type: z.enum(REPORT_TYPES),
   /** 1 = minor … 5 = corridor-blocking */
   severity: z.number().int().min(1).max(5),
+  description: z.string().optional(),
   /** §4.4 corroboration score, 0 (single unconfirmed report) … 1 (3+ distinct reporters) */
   corroborationScore: z.number().min(0).max(1).default(0),
   /** ~150m-precision geohash (§4.4) — see geo/geohash.ts GEOHASH_PRECISION */
@@ -47,8 +48,8 @@ export const ReportSchema = z.object({
   corridorId: z.string().min(1),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
-  /** optional photo reference (data URL or storage path) — PS point (f) */
-  photo: z.string().optional(),
+  /** optional photo reference (download URL) — PS point (f) */
+  photoUrl: z.string().optional(),
   status: z.enum(REPORT_STATUSES).default('unconfirmed'),
   reporterId: z.string().min(1),
   /** ISO 8601 timestamp, client clock at creation */

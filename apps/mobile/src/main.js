@@ -100,14 +100,17 @@ reportSubmit.addEventListener('click', async () => {
   const type = document.getElementById('report-type').value;
   const sev = parseInt(severityInput.value, 10);
   const desc = document.getElementById('report-desc').value;
+  const photoInput = document.getElementById('report-photo');
+  const photoFile = photoInput.files[0];
   
   if (!desc) {
     alert(t('common.error') || 'Please enter a description');
     return;
   }
   
-  await submitReport({ type, severity: sev, description: desc });
+  await submitReport({ type, severity: sev, description: desc, photoFile });
   document.getElementById('report-desc').value = '';
+  if (photoInput) photoInput.value = '';
 });
 
 // Initial renders

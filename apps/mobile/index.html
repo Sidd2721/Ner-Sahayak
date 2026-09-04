@@ -212,7 +212,7 @@
 </head>
 <body>
   <header>
-    <h1 id="app-title">NER Sahayak</h1>
+    <h1 id="app-title">NER Sahayak (Dima Hasao)</h1>
     <div class="header-controls">
       <span id="pending-badge" class="hidden">Pending Sync</span>
       <select id="lang-select">
@@ -238,7 +238,7 @@
 
   <div id="app-view" class="container hidden">
     <section class="glass-card">
-      <h2 id="status-title">Live Incident Map</h2>
+      <h2 id="status-title">Live Incident Map - NH-27 (Dima Hasao)</h2>
       <div id="map-container" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 0.75rem; z-index: 1; border: 1px solid var(--glass-border);"></div>
       <style>
         .safe-route-btn { width: 100%; margin-bottom: 0.5rem; }
@@ -265,6 +265,9 @@
       <input type="range" id="report-severity" min="1" max="5" value="3">
       <div id="risk-preview" style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-muted); font-weight: 500;">Moderate Risk</div>
       
+      <label>Photo Evidence (Optional)</label>
+      <input type="file" id="report-photo" accept="image/*" capture="environment" style="background: transparent; border: none; padding: 0.5rem 0;" />
+
       <label>Details</label>
       <textarea id="report-desc" placeholder="Describe the incident..." rows="3"></textarea>
       

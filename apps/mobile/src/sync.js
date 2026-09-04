@@ -1,5 +1,7 @@
 import { db } from './db.js';
 import { doc, setDoc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from './firebase.js';
 
 /**
  * Outbox-pattern sync engine — build guide Phase 4 + ARCHITECTURE.md Layer 1.
@@ -109,6 +111,12 @@ export class SyncEngine {
         // is what makes the retry idempotent instead of failing.
         await db.reports.update(job.entityLocalId, { synced: true });
         return;
+      }
+      if (local.photoBlob) {
+        const photoRef = ref(storage, `reports/${local.reportId}`);
+        await uploadBytes(photoRef, local.photoBlob);
+        const photoUrl = await getDownloadURL(photoRef);
+        local.payload.photoUrl = photoUrl;
       }
       await setDoc(ref, local.payload);
       await db.reports.update(job.entityLocalId, { remoteId: local.reportId, synced: true });
