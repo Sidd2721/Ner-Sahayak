@@ -5,8 +5,9 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/AuthProvider';
 import { calcContinuityGap, continuityStatus } from '@shared/risk/calcContinuity';
-import { riskCategory } from '@shared/risk/calcRisk';
+import { riskCategory, CLOSURE_DAYS_BY_CATEGORY } from '@shared/risk/calcRisk';
 import type { District } from '@shared/schemas/district';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function ContinuityPage() {
   const { user } = useAuth();
@@ -35,9 +36,69 @@ export default function ContinuityPage() {
     return { color: 'bg-red-100 text-red-800 border-red-200', icon: '🔴' };
   };
 
+  const chartData = districts.map(d => {
+    const cat = riskCategory(d.currentRiskScore);
+    const expectedClosureDays = CLOSURE_DAYS_BY_CATEGORY[cat];
+    const gap = calcContinuityGap(d.stockBufferDays, cat);
+    return {
+      name: d.name.split(' ')[0], // short name for Y axis
+      fullName: d.name,
+      stockBufferDays: d.stockBufferDays,
+      expectedClosureDays,
+      continuityGap: gap
+    };
+  });
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-4 border rounded-lg shadow-lg">
+          <p className="font-bold mb-2">{data.fullName}</p>
+          <p className="text-sm text-green-700">Buffer Stock: {data.stockBufferDays} days</p>
+          <p className="text-sm text-red-700">Expected Closure: {data.expectedClosureDays} days</p>
+          <hr className="my-2" />
+          <p className={`text-sm font-bold ${data.continuityGap < 0 ? 'text-red-600' : 'text-green-600'}`}>
+            Continuity Gap: {data.continuityGap > 0 ? '+' : ''}{data.continuityGap} days
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Supply Continuity Impact</h1>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-3xl mb-8">
+        <h2 className="text-xl font-semibold mb-6 border-b pb-2">Continuity Gap Overview</h2>
+        {districts.length === 0 ? (
+          <div className="p-8 text-center text-gray-500 border rounded-lg">
+            No district data available for visualization.
+          </div>
+        ) : (
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="closureGradient" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#F59E0B" />
+                    <stop offset="100%" stopColor="#EF4444" />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f3f4f6" />
+                <XAxis type="number" tickLine={false} axisLine={{ stroke: '#e5e7eb' }} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} tick={{ fill: '#4b5563', fontSize: 13, fontWeight: 500 }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f9fafb' }} />
+                <Legend wrapperStyle={{ paddingTop: '10px' }} />
+                <Bar dataKey="stockBufferDays" name="Buffer Stock (Days)" fill="#10B981" barSize={20} isAnimationActive={true} />
+                <Bar dataKey="expectedClosureDays" name="Expected Closure (Days)" fill="url(#closureGradient)" barSize={20} isAnimationActive={true} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-3xl">
         <h2 className="text-xl font-semibold mb-6 border-b pb-2">Live District Continuity Status</h2>

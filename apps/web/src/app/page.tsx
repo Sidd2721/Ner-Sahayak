@@ -5,6 +5,7 @@ import { collection, onSnapshot, query, orderBy, limit, Timestamp } from 'fireba
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/AuthProvider';
 import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface Report {
   id: string;
@@ -18,6 +19,7 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [stats, setStats] = useState({ active: 0, resolved: 0, critical: 0 });
+  const [chartData, setChartData] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -45,8 +47,18 @@ export default function Dashboard() {
         if (data.severity >= 4 && data.status !== 'resolved') critical++;
       });
 
+      // Group for chart data
+      const aggregated: Record<string, any> = {};
+      newReports.forEach(r => {
+        if (!aggregated[r.type]) {
+          aggregated[r.type] = { type: r.type.replace('-', ' '), 'Sev 1': 0, 'Sev 2': 0, 'Sev 3': 0, 'Sev 4': 0, 'Sev 5': 0 };
+        }
+        aggregated[r.type][`Sev ${r.severity}`] += 1;
+      });
+
       setReports(newReports);
       setStats({ active, resolved, critical });
+      setChartData(Object.values(aggregated));
     });
 
     return () => unsubscribe();
@@ -89,6 +101,31 @@ export default function Dashboard() {
             <p className="text-2xl font-bold text-gray-900">{stats.resolved}</p>
           </div>
         </div>
+      </div>
+
+      {/* Reports Chart */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-10 h-96">
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">Incident Distribution by Type & Severity</h2>
+        {chartData.length === 0 ? (
+          <div className="h-full flex items-center justify-center text-gray-400">
+            No incidents available to visualize.
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+              <XAxis dataKey="type" tickLine={false} axisLine={{ stroke: '#e5e7eb' }} tick={{ fill: '#6b7280', fontSize: 12 }} />
+              <YAxis tickLine={false} axisLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} allowDecimals={false} />
+              <Tooltip cursor={{ fill: '#f9fafb' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+              <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
+              <Bar dataKey="Sev 1" stackId="a" fill="#15803D" isAnimationActive={true} />
+              <Bar dataKey="Sev 2" stackId="a" fill="#22C55E" isAnimationActive={true} />
+              <Bar dataKey="Sev 3" stackId="a" fill="#F59E0B" isAnimationActive={true} />
+              <Bar dataKey="Sev 4" stackId="a" fill="#EF4444" isAnimationActive={true} />
+              <Bar dataKey="Sev 5" stackId="a" fill="#991B1B" isAnimationActive={true} />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* Recent Reports */}

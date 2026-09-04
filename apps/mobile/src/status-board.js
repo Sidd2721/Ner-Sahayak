@@ -12,19 +12,53 @@ export async function renderStatusBoard() {
     return;
   }
 
-  el.innerHTML = districts.map((d) => {
-    let icon = '🟢';
-    let label = d.connectivityStatus || 'OK';
-    if (d.connectivityStatus === 'isolated') { icon = '🔴'; }
-    else if (d.connectivityStatus === 'degraded') { icon = '🟠'; }
+  el.innerHTML = districts.map((d, i) => {
+    const score = d.currentRiskScore || 0;
+    const isCritical = score >= 0.7;
+    const isWatch = score >= 0.3 && score < 0.7;
+    const color = isCritical ? 'var(--signal-critical)' : (isWatch ? 'var(--signal-watch)' : 'var(--signal-clear)');
+    const filter = isCritical ? 'filter="drop-shadow(0 0 4px #ef4444)"' : '';
+    
+    // Circle r=40, circumference = 2 * PI * 40 = 251.2
+    const circumference = 251.2;
+    const targetOffset = circumference * (1 - score);
+    
+    const shortName = d.id === 'dima-hasao' ? 'Dima Hasao' : (d.id === 'cachar' ? 'Cachar' : d.id);
     
     return `
-    <div class="district-row status-${d.connectivityStatus ? d.connectivityStatus.toLowerCase() : 'connected'}">
-      <span>${d.id}</span>
-      <span>${icon} ${label}</span>
-      <span>${d.continuityGap || 0}d gap</span>
-    </div>
-  `}).join('');
+      <div class="gauge-container">
+        <svg viewBox="0 0 100 100" width="100" height="100">
+          <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--glass-border)" stroke-width="8" transform="rotate(-90 50 50)" />
+          <circle 
+            class="gauge-arc" id="gauge-arc-${i}"
+            cx="50" cy="50" r="40" fill="transparent" 
+            stroke="${color}" stroke-width="8" 
+            stroke-dasharray="${circumference}" 
+            stroke-dashoffset="${circumference}" 
+            transform="rotate(-90 50 50)"
+            stroke-linecap="round"
+            ${filter}
+            data-target="${targetOffset}"
+          />
+          <text x="50" y="47" class="gauge-text-score">${(score * 100).toFixed(0)}</text>
+          <text x="50" y="68" class="gauge-text-label">RISK</text>
+        </svg>
+        <span class="gauge-name">${shortName}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Trigger animation after DOM flush
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      districts.forEach((d, i) => {
+        const arc = document.getElementById(`gauge-arc-${i}`);
+        if (arc) {
+          arc.style.strokeDashoffset = arc.getAttribute('data-target');
+        }
+      });
+    });
+  });
 }
 
 export function subscribeCorridorUpdates(fdb, onSnapshot, collection, doc) {
