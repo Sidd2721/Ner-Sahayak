@@ -5,6 +5,7 @@ import { db } from './db.js';
 
 let map;
 let userMarker;
+let routePolyline;
 
 // Setup custom icons for leaflets (since default icon URLs may fail in Vite without proper imports)
 const iconDefault = L.icon({
@@ -107,8 +108,11 @@ export async function optimizeRoute(start, end) {
     const data = await response.json();
 
     if (data.routes && data.routes.length > 0) {
+      if (routePolyline) {
+        map.removeLayer(routePolyline);
+      }
       const routeCoords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-      L.polyline(routeCoords, { color: '#eab308', weight: 4, dashArray: '10, 10' })
+      routePolyline = L.polyline(routeCoords, { color: '#eab308', weight: 4, dashArray: '10, 10' })
         .bindPopup('Optimized Alternate Route')
         .addTo(map);
     }

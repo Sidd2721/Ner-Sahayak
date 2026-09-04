@@ -9,16 +9,17 @@ const BANDS = [
 
 export function plainLanguageRisk(inputs, t) {
   // Map front-end UI selections (severity, type, etc.) to the 0..1 normalized inputs required by the shared calcRisk.
-  // This is a naive translation for the form preview until real ML models exist.
+  // For the demo preview, we map the single UI 'severity' slider to all environmental factors
+  // so the risk score can actually reach the 'High' and 'Severe' bands.
   const mappedInputs = {
-    rainfallNorm: inputs.weatherImpact || 0,
+    rainfallNorm: inputs.weatherImpact || inputs.severity || 0,
     slopeNorm: inputs.severity || 0,
-    soilSaturationNorm: inputs.roadCondition || 0,
+    soilSaturationNorm: inputs.roadCondition || inputs.severity || 0,
     recentIncidentNorm: inputs.type === 'landslide' ? 1.0 : 0,
   };
   
   const result = calcRisk(mappedInputs);
   // result.category is 'Low', 'Medium', 'High', 'Severe'
-  const key = `risk.${result.category.toLowerCase()}`;
+  const key = `risk.${result.category}`;
   return { score: (result.score * 100).toFixed(0), message: t(key) || result.category };
 }

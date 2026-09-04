@@ -102,7 +102,7 @@ reportSubmit.addEventListener('click', async () => {
   const desc = document.getElementById('report-desc').value;
   
   if (!desc) {
-    alert(t('error.descRequired') || 'Please enter a description');
+    alert(t('common.error') || 'Please enter a description');
     return;
   }
   
