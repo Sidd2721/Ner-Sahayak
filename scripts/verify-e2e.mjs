@@ -14,8 +14,8 @@ import { test, expect, chromium } from '@playwright/test';
     console.log('--- Step 1: Mobile App Load (Online) ---');
     await page.goto('http://localhost:3001/');
     // Login
-    await page.fill('#auth-email', 'citizen@test.com');
-    await page.fill('#auth-pass', 'pass1234');
+    await page.fill('#auth-email', 'demo@nersahayak.com');
+    await page.fill('#auth-pass', 'demo123');
     await page.click('#auth-submit');
     
     // Wait for the map and status board
@@ -64,8 +64,8 @@ import { test, expect, chromium } from '@playwright/test';
     await webPage.goto('http://localhost:3000/login');
     
     // Login to control room
-    await webPage.fill('input[type="email"]', 'control-room@test.com');
-    await webPage.fill('input[type="password"]', 'pass1234');
+    await webPage.fill('input[type="email"]', 'control-room@nersahayak.com');
+    await webPage.fill('input[type="password"]', 'd0da73fbe05b');
     await webPage.click('button[type="submit"]');
 
     await webPage.waitForURL('**/', { timeout: 15000 });
@@ -73,7 +73,7 @@ import { test, expect, chromium } from '@playwright/test';
     
     // Wait for feed to update
     await webPage.waitForTimeout(3000);
-    const feedText = await webPage.locator('text=Landslide').first().textContent();
+    const feedText = await webPage.locator('text=landslide').first().textContent();
     console.log(`✅ Report arrived in Web feed: "${feedText.trim()}"`);
 
     console.log('--- Step 4.5: Web Reports Page Filters (Type + Status) ---');
@@ -85,7 +85,7 @@ import { test, expect, chromium } from '@playwright/test';
     console.log(`✅ Status 'confirmed' filtered correctly (shows no reports).`);
     await webPage.selectOption('#status-filter', 'unconfirmed');
     await webPage.waitForTimeout(1000);
-    const unconfirmedFeed = await webPage.locator('text=Landslide').first().textContent();
+    const unconfirmedFeed = await webPage.locator('text=landslide').first().textContent();
     console.log(`✅ Status 'unconfirmed' correctly showed report.`);
 
     console.log('--- Step 5: Continuity Page Verification ---');
@@ -109,8 +109,8 @@ import { test, expect, chromium } from '@playwright/test';
     pageNoGps.on('console', msg => console.log('NO_GPS PAGE LOG:', msg.text()));
     pageNoGps.on('pageerror', err => console.log('NO_GPS PAGE ERROR:', err.message));
     await pageNoGps.goto('http://localhost:3001/');
-    await pageNoGps.fill('#auth-email', 'citizen@test.com');
-    await pageNoGps.fill('#auth-pass', 'pass1234');
+    await pageNoGps.fill('#auth-email', 'demo@nersahayak.com');
+    await pageNoGps.fill('#auth-pass', 'demo123');
     await pageNoGps.click('#auth-submit');
     await pageNoGps.waitForSelector('#map-container');
     await pageNoGps.waitForTimeout(2000); // Wait for caching
@@ -126,7 +126,7 @@ import { test, expect, chromium } from '@playwright/test';
     // Using the mobile page context to execute a direct Firestore REST API request or client SDK call
     const negativeTestResult = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/v1/projects/demo-sih2026/databases/(default)/documents/reports', {
+        const response = await fetch('http://127.0.0.1:8080/v1/projects/sih2026-4d419/databases/(default)/documents/reports', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fields: { type: { stringValue: 'invalid' } } }) // Missing required fields!

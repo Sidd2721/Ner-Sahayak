@@ -80,7 +80,7 @@ export default function LoginPage() {
         </form>
         
         <div className="mt-6 text-center text-sm text-gray-500">
-          Demo: control-room@test.com / pass1234
+          Control room access is provisioned by an administrator.
         </div>
       </div>
     </div>

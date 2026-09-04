@@ -141,8 +141,10 @@ service cloud.firestore {
       allow read: if isOwner(userId) || isAuthority();
       // Users write their own profile (display name, phone, lastKnownFix).
       // They cannot change their own `role` — that is set by Admin SDK only
-      // during user provisioning.
-      allow create: if isOwner(userId) && !('role' in request.resource.data);
+      // during user provisioning, EXCEPT they are allowed to self-assign 'citizen' on creation.
+      allow create: if isOwner(userId) && (
+        !('role' in request.resource.data) || request.resource.data.role == 'citizen'
+      );
       allow update: if isOwner(userId)
                     && !('role' in request.resource.data.diff(resource.data).affectedKeys());
       allow delete: if false;

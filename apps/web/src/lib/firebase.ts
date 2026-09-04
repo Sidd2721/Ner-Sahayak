@@ -7,7 +7,7 @@ import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 
 // Use demo project configuration for local development
 const firebaseConfig = {
-  projectId: process.env.NEXT_PUBLIC_USE_EMULATOR === 'true' ? "demo-sih2026" : "sih2026-ce822",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "sih2026-ce822",
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "fake-api-key",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "sih2026-ce822.firebaseapp.com",
 };
