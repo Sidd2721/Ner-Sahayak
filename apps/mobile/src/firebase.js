@@ -27,8 +27,9 @@ export const fdb = getFirestore(app);
 export const storage = getStorage(app);
 
 if (USE_EMULATOR) {
+  const emuHost = import.meta.env.VITE_EMULATOR_HOST || '127.0.0.1';
   // idempotent across HMR reloads
-  try { connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true }); } catch { /* already connected */ }
-  try { connectFirestoreEmulator(fdb, '127.0.0.1', 8080); } catch { /* already connected */ }
-  try { connectStorageEmulator(storage, '127.0.0.1', 9199); } catch { /* already connected */ }
+  try { connectAuthEmulator(auth, `http://${emuHost}:9099`, { disableWarnings: true }); } catch { /* already connected */ }
+  try { connectFirestoreEmulator(fdb, emuHost, 8080); } catch { /* already connected */ }
+  try { connectStorageEmulator(storage, emuHost, 9199); } catch { /* already connected */ }
 }
